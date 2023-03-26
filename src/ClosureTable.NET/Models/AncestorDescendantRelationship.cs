@@ -14,22 +14,22 @@ public class AncestorDescendantRelationship<TEntity, TKey>
     private readonly TEntity? _ancestor;
     private readonly TEntity? _descendant;
 
-    public AncestorDescendantRelationship(TEntity ancestor, TEntity descendant, int depth) // : this()
+    public AncestorDescendantRelationship(TEntity ancestor, TEntity descendant, int depth) : this()
     {
         _ancestor = ancestor;
         _descendant = descendant;
         Depth = depth;
     }
 
-    // // Required for EF constructor binding. See: https://github.com/dotnet/efcore/issues/12078
-    // private protected? AncestorDescendantRelationship()
-    // {
-    //     AncestorId = default!;
-    //     _ancestor = default!;
-    //
-    //     DescendantId = default!;
-    //     _descendant = default!;
-    // }
+    // Required for EF constructor binding. See: https://github.com/dotnet/efcore/issues/12078
+    private AncestorDescendantRelationship()
+    {
+        AncestorId = default!;
+        _ancestor = default!;
+    
+        DescendantId = default!;
+        _descendant = default!;
+    }
 
     public TKey AncestorId { get; }
     public TEntity Ancestor => _ancestor.AssertNavigationLoaded(nameof(Ancestor));
