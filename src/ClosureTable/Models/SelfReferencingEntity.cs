@@ -2,7 +2,7 @@
 
 namespace ClosureTable.Models;
 
-public abstract class SelfReferencingEntity<TEntity, TKey>
+public class SelfReferencingEntity<TEntity, TKey>
     where TEntity : SelfReferencingEntity<TEntity, TKey>
     where TKey : notnull
 {
@@ -12,7 +12,7 @@ public abstract class SelfReferencingEntity<TEntity, TKey>
     private readonly HashSet<AncestorDescendantRelationship<TEntity, TKey>>? _descendantRelationships;
     private readonly HashSet<TEntity>? _descendants;
 
-    protected SelfReferencingEntity(TEntity parent, int? position = null) : this()
+    public SelfReferencingEntity(TEntity parent, int? position = null) : this()
     {
         _ancestorRelationships = new HashSet<AncestorDescendantRelationship<TEntity, TKey>>
         {
@@ -54,7 +54,7 @@ public abstract class SelfReferencingEntity<TEntity, TKey>
         _descendants.AssertNavigationLoaded(nameof(Descendants));
 
     public IReadOnlyCollection<AncestorDescendantRelationship<TEntity, TKey>> DescendantRelationships =>
-        _descendantRelationships.AssertNavigationLoaded(nameof(DescendantRelationships));
+        _ancestorRelationships.AssertNavigationLoaded(nameof(DescendantRelationships));
 
     private TEntity DerivedInstance => (TEntity)this;
 
