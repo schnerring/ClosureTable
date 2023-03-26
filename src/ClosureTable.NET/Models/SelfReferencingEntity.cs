@@ -1,9 +1,8 @@
-﻿using ClosureTable.NET.Abstractions;
-using ClosureTable.NET.Helpers;
+﻿using ClosureTable.NET.Helpers;
 
 namespace ClosureTable.NET.Models;
 
-public abstract class SelfReferencingEntity<TEntity, TKey> : IEntity<TKey>
+public abstract class SelfReferencingEntity<TEntity, TKey>
     where TEntity : SelfReferencingEntity<TEntity, TKey>
     where TKey : notnull
 {
@@ -13,15 +12,18 @@ public abstract class SelfReferencingEntity<TEntity, TKey> : IEntity<TKey>
     private readonly HashSet<AncestorDescendantRelationship<TEntity, TKey>>? _descendantRelationships;
     private readonly HashSet<TEntity>? _descendants;
 
-    protected SelfReferencingEntity(TEntity parent) : this()
+    protected SelfReferencingEntity(TEntity parent, int? position = null) : this()
     {
         _ancestorRelationships = new HashSet<AncestorDescendantRelationship<TEntity, TKey>>
         {
             // reflexive edge to self
-            new(Derived, Derived, 0)
+            new(DerivedInstance, DerivedInstance, 0)
         };
 
         _descendantRelationships = new HashSet<AncestorDescendantRelationship<TEntity, TKey>>();
+
+        if (position is > 0)
+            Position = position.Value;
 
         SetParent(parent);
     }
@@ -38,6 +40,10 @@ public abstract class SelfReferencingEntity<TEntity, TKey> : IEntity<TKey>
         _descendantRelationships = default!;
     }
 
+    public TKey Id { get; }
+
+    public int Position { get; }
+
     public IReadOnlyCollection<TEntity> Ancestors =>
         _ancestors.AssertNavigationLoaded(nameof(Ancestors));
 
@@ -50,9 +56,7 @@ public abstract class SelfReferencingEntity<TEntity, TKey> : IEntity<TKey>
     public IReadOnlyCollection<AncestorDescendantRelationship<TEntity, TKey>> DescendantRelationships =>
         _descendantRelationships.AssertNavigationLoaded(nameof(DescendantRelationships));
 
-    private TEntity Derived => (TEntity)this;
-
-    public TKey Id { get; }
+    private TEntity DerivedInstance => (TEntity)this;
 
     public void SetParent(TEntity? parent)
     {
