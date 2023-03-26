@@ -1,4 +1,4 @@
-﻿namespace ClosureTable.NET.Helpers;
+﻿namespace ClosureTable.Helpers;
 
 public class UninitializedNavigationException : InvalidOperationException
 {

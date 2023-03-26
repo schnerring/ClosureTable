@@ -1,6 +1,6 @@
-﻿using ClosureTable.NET.Helpers;
+﻿using ClosureTable.Helpers;
 
-namespace ClosureTable.NET.Models;
+namespace ClosureTable.Models;
 
 /// <summary>
 ///     Ancestor-descendant relationship entity for self-referencing entity types.

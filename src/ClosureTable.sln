@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosureTable.NET", "ClosureTable.NET\ClosureTable.NET.csproj", "{AF19964E-B8BC-49EC-91EB-615142C304CB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosureTable", "ClosureTable\ClosureTable.csproj", "{AF19964E-B8BC-49EC-91EB-615142C304CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClosureTable.Infrastructure", "ClosureTable.Infrastructure\ClosureTable.Infrastructure.csproj", "{9F2B3E4E-898A-46B6-B860-47CAE77B4355}"
 EndProject

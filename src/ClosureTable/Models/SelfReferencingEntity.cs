@@ -1,6 +1,6 @@
-﻿using ClosureTable.NET.Helpers;
+﻿using ClosureTable.Helpers;
 
-namespace ClosureTable.NET.Models;
+namespace ClosureTable.Models;
 
 public abstract class SelfReferencingEntity<TEntity, TKey>
     where TEntity : SelfReferencingEntity<TEntity, TKey>
