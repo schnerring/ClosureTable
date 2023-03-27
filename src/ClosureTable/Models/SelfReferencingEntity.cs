@@ -12,8 +12,10 @@ public class SelfReferencingEntity<TEntity, TKey>
     private readonly HashSet<AncestorDescendantRelationship<TEntity, TKey>>? _descendantRelationships;
     private readonly HashSet<TEntity>? _descendants;
 
-    public SelfReferencingEntity(TEntity parent, int? position = null) : this()
+    public SelfReferencingEntity(TEntity? parent = null, int? position = null) : this()
     {
+        Parent = parent;
+
         _ancestorRelationships = new HashSet<AncestorDescendantRelationship<TEntity, TKey>>
         {
             // reflexive edge to self
@@ -42,7 +44,8 @@ public class SelfReferencingEntity<TEntity, TKey>
 
     public TKey Id { get; }
 
-    public int Position { get; }
+    public TKey? ParentId { get; }
+    public TEntity? Parent { get; }
 
     public IReadOnlyCollection<TEntity> Ancestors =>
         _ancestors.AssertNavigationLoaded(nameof(Ancestors));
@@ -55,6 +58,8 @@ public class SelfReferencingEntity<TEntity, TKey>
 
     public IReadOnlyCollection<AncestorDescendantRelationship<TEntity, TKey>> DescendantRelationships =>
         _ancestorRelationships.AssertNavigationLoaded(nameof(DescendantRelationships));
+
+    public int Position { get; }
 
     private TEntity DerivedInstance => (TEntity)this;
 
