@@ -14,12 +14,10 @@ public class SelfReferencingEntity<TEntity, TKey>
 
     public SelfReferencingEntity(TEntity? parent = null, int? position = null) : this()
     {
-        Parent = parent;
-
         _ancestorRelationships = new HashSet<AncestorDescendantRelationship<TEntity, TKey>>
         {
-            // reflexive edge to self
-            new(DerivedInstance, DerivedInstance, 0)
+            // Reflexivity
+            new((TEntity)this, (TEntity)this, 0)
         };
 
         _descendantRelationships = new HashSet<AncestorDescendantRelationship<TEntity, TKey>>();
@@ -44,8 +42,9 @@ public class SelfReferencingEntity<TEntity, TKey>
 
     public TKey Id { get; }
 
-    public TKey? ParentId { get; }
-    public TEntity? Parent { get; }
+    // ReSharper disable once ReplaceAutoPropertyWithComputedProperty
+    public TKey? ParentId { get; } = default!;
+    public TEntity? Parent { get; private set; }
 
     public IReadOnlyCollection<TEntity> Ancestors =>
         _ancestors.AssertNavigationLoaded(nameof(Ancestors));
@@ -57,15 +56,15 @@ public class SelfReferencingEntity<TEntity, TKey>
         _descendants.AssertNavigationLoaded(nameof(Descendants));
 
     public IReadOnlyCollection<AncestorDescendantRelationship<TEntity, TKey>> DescendantRelationships =>
-        _ancestorRelationships.AssertNavigationLoaded(nameof(DescendantRelationships));
+        _descendantRelationships.AssertNavigationLoaded(nameof(DescendantRelationships));
 
     public int Position { get; }
-
-    private TEntity DerivedInstance => (TEntity)this;
 
     public void SetParent(TEntity? parent)
     {
         if (parent == this)
             throw new InvalidOperationException("Cannot set parent to self");
+
+        Parent = parent;
     }
 }

@@ -5,7 +5,7 @@ namespace ClosureTable.Models;
 /// <summary>
 ///     Ancestor-descendant relationship entity for self-referencing entity types.
 /// </summary>
-/// <typeparam name="TEntity">Target type of ancestor-descendant relationship.</typeparam>
+/// <typeparam name="TEntity">Entity type the ancestor-descendant relationship targets.</typeparam>
 /// <typeparam name="TKey">Primary key type of target type.</typeparam>
 public class AncestorDescendantRelationship<TEntity, TKey>
     where TEntity : SelfReferencingEntity<TEntity, TKey>
