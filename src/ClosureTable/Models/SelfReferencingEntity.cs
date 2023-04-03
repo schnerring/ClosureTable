@@ -4,7 +4,7 @@ namespace ClosureTable.Models;
 
 public class SelfReferencingEntity<TSelf, TKey>
     where TSelf : SelfReferencingEntity<TSelf, TKey>
-    where TKey : notnull
+    where TKey : struct
 {
     private readonly HashSet<AncestorDescendantRelationship<TSelf, TKey>>? _ancestorRelationships;
     private readonly HashSet<TSelf>? _ancestors;
@@ -39,6 +39,8 @@ public class SelfReferencingEntity<TSelf, TKey>
 
         ParentId = default!;
         Parent = default!;
+
+        _children = default!;
 
         _ancestors = default!;
         _ancestorRelationships = default!;

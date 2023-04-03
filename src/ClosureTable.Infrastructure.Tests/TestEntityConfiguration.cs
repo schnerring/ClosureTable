@@ -8,15 +8,10 @@ public class TestEntityConfiguration : SelfReferencingEntityConfiguration<TestEn
 {
     public override void Configure(EntityTypeBuilder<TestEntity> builder)
     {
-        builder.Ignore(entity => entity.ParentId);
-        builder.Ignore(entity => entity.Parent);
-
-        builder.Ignore(entity => entity.Children);
+        base.Configure(builder);
 
         builder
             .Property(entity => entity.Id)
             .HasDefaultValueSql("NEWSEQUENTIALID()");
-
-        base.Configure(builder);
     }
 }

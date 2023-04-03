@@ -9,7 +9,7 @@ namespace ClosureTable.Models;
 /// <typeparam name="TKey">Primary key type of target type.</typeparam>
 public class AncestorDescendantRelationship<TEntity, TKey>
     where TEntity : SelfReferencingEntity<TEntity, TKey>
-    where TKey : notnull
+    where TKey : struct
 {
     private readonly TEntity? _ancestor;
     private readonly TEntity? _descendant;
