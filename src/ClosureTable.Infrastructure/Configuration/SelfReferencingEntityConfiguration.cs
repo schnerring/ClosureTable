@@ -18,7 +18,6 @@ public abstract class SelfReferencingEntityConfiguration<TEntity, TKey> : IEntit
             .HasOne(entity => entity.Parent)
             .WithMany(entity => entity.Children)
             .HasForeignKey(entity => entity.ParentId);
-        // .OnDelete(DeleteBehavior.Restrict);
 
         builder
             .Navigation(entity => entity.Children)

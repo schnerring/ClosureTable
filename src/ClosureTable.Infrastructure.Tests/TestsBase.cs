@@ -58,11 +58,33 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable
         // Arrange
         using var context = _fixture.CreateContext();
 
+        // Act
+        var firstEntity = context.TestEntities.First();
+        var relationships = context
+            .TestRelationships
+            .GetAncestorRelationships(firstEntity.Id, true);
+
         // Assert
-        context
-            .TestEntities
-            .ToList()
+        relationships
             .Should()
-            .HaveCount(2);
+            .HaveCount(1);
+    }
+
+    [Fact]
+    public void Test4()
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+
+        // Act
+        var firstEntity = context.TestEntities.First();
+        var relationships = context
+            .TestRelationships
+            .GetAncestorRelationships(firstEntity.Id, false);
+
+        // Assert
+        relationships
+            .Should()
+            .HaveCount(0);
     }
 }
