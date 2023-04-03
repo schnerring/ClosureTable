@@ -29,7 +29,7 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable
             .TestEntities
             .ToList()
             .Should()
-            .HaveCount(2);
+            .HaveCount(15);
     }
 
     [Fact]
@@ -41,7 +41,7 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable
         // Act
         context
             .TestEntities
-            .Add(new TestEntity(null));
+            .Add(new TestEntity(null, "new"));
         context.SaveChanges();
 
         // Assert
@@ -49,42 +49,72 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable
             .TestEntities
             .ToList()
             .Should()
-            .HaveCount(3);
+            .HaveCount(16);
     }
 
-    [Fact]
-    public void Test3()
+    [Theory]
+    [InlineData("1", 1)]
+    [InlineData("2", 1)]
+    [InlineData("3", 1)]
+    [InlineData("4", 1)]
+    [InlineData("5", 1)]
+    [InlineData("6", 1)]
+    [InlineData("7", 1)]
+    [InlineData("8", 1)]
+    [InlineData("9", 1)]
+    [InlineData("10", 2)]
+    [InlineData("11", 3)]
+    [InlineData("12", 4)]
+    [InlineData("13", 2)]
+    [InlineData("14", 2)]
+    [InlineData("15", 2)]
+    public void Test3(string entityName, int expectedAncestorCount)
     {
         // Arrange
         using var context = _fixture.CreateContext();
+        var entity = context.TestEntities.First(entity => entity.Name == entityName);
 
         // Act
-        var firstEntity = context.TestEntities.First();
         var relationships = context
             .TestRelationships
-            .GetAncestorRelationships(firstEntity.Id, true);
+            .GetAncestorRelationships(entity.Id, true);
 
         // Assert
         relationships
             .Should()
-            .HaveCount(1);
+            .HaveCount(expectedAncestorCount);
     }
 
-    [Fact]
-    public void Test4()
+    [Theory]
+    [InlineData("1", 0)]
+    [InlineData("2", 0)]
+    [InlineData("3", 0)]
+    [InlineData("4", 0)]
+    [InlineData("5", 0)]
+    [InlineData("6", 0)]
+    [InlineData("7", 0)]
+    [InlineData("8", 0)]
+    [InlineData("9", 0)]
+    [InlineData("10", 1)]
+    [InlineData("11", 2)]
+    [InlineData("12", 3)]
+    [InlineData("13", 1)]
+    [InlineData("14", 1)]
+    [InlineData("15", 1)]
+    public void Test4(string entityName, int expectedAncestorCount)
     {
         // Arrange
         using var context = _fixture.CreateContext();
+        var entity = context.TestEntities.First(entity => entity.Name == entityName);
 
         // Act
-        var firstEntity = context.TestEntities.First();
         var relationships = context
             .TestRelationships
-            .GetAncestorRelationships(firstEntity.Id, false);
+            .GetAncestorRelationships(entity.Id, false);
 
         // Assert
         relationships
             .Should()
-            .HaveCount(0);
+            .HaveCount(expectedAncestorCount);
     }
 }
