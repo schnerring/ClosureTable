@@ -14,6 +14,8 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable
     public void Dispose()
     {
         _fixture.Cleanup();
+
+        GC.SuppressFinalize(this);
     }
 
     [Fact]
@@ -36,13 +38,13 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable
         // Arrange
         using var context = _fixture.CreateContext();
 
-        // Assert
+        // Act
         context
             .TestEntities
             .Add(new TestEntity(null));
-
         context.SaveChanges();
 
+        // Assert
         context
             .TestEntities
             .ToList()

@@ -5,7 +5,7 @@ namespace ClosureTable.Infrastructure.Tests;
 
 public abstract class DatabaseFixtureBase : IDisposable
 {
-    protected static IConfiguration Configuration;
+    protected static IConfiguration Configuration { get; }
 
     private readonly DbContextOptions _options;
 
@@ -31,6 +31,8 @@ public abstract class DatabaseFixtureBase : IDisposable
     {
         using var context = CreateContext();
         context.Database.EnsureDeleted();
+
+        GC.SuppressFinalize(this);
     }
 
     public void Cleanup()
