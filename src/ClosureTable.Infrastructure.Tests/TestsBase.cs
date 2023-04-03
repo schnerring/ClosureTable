@@ -4,25 +4,63 @@ namespace ClosureTable.Infrastructure.Tests;
 
 public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable where TFixture : DatabaseFixtureBase
 {
-    private readonly TestContext _context;
+    private readonly TFixture _fixture;
 
     protected TestsBase(TFixture fixture)
     {
-        _context = fixture.CreateContext();
+        _fixture = fixture;
     }
 
     public void Dispose()
     {
-        _context.Dispose();
+        _fixture.Cleanup();
     }
 
     [Fact]
     public void Test1()
     {
-        _context
+        // Arrange
+        using var context = _fixture.CreateContext();
+
+        // Assert
+        context
             .TestEntities
             .ToList()
             .Should()
-            .HaveCount(c => c > 0);
+            .HaveCount(2);
+    }
+
+    [Fact]
+    public void Test2()
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+
+        // Assert
+        context
+            .TestEntities
+            .Add(new TestEntity(null));
+
+        context.SaveChanges();
+
+        context
+            .TestEntities
+            .ToList()
+            .Should()
+            .HaveCount(3);
+    }
+
+    [Fact]
+    public void Test3()
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+
+        // Assert
+        context
+            .TestEntities
+            .ToList()
+            .Should()
+            .HaveCount(2);
     }
 }
