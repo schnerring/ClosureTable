@@ -13,5 +13,7 @@ public class TestEntityConfiguration : SelfReferencingEntityConfiguration<TestEn
         builder
             .Property(entity => entity.Id)
             .HasDefaultValueSql("NEWSEQUENTIALID()");
+
+        builder.Property(entity => entity.Name);
     }
 }
