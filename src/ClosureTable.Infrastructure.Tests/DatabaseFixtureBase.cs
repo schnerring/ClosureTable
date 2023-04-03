@@ -37,9 +37,9 @@ public abstract class DatabaseFixtureBase : IDisposable
     {
         using var context = CreateContext();
 
-        context.Set<TestEntity>().RemoveRange(context.Set<TestEntity>());
+        context.TestEntities.RemoveRange(context.TestEntities);
 
-        context.Set<TestEntity>().AddRange(
+        context.TestEntities.AddRange(
             new TestEntity(null),
             new TestEntity(null));
 

@@ -8,6 +8,8 @@ public class TestContext : DbContext
     {
     }
 
+    public DbSet<TestEntity> TestEntities => Set<TestEntity>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new TestEntityConfiguration());

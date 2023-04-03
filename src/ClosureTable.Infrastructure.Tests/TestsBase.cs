@@ -1,3 +1,5 @@
+using FluentAssertions;
+
 namespace ClosureTable.Infrastructure.Tests;
 
 public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable where TFixture : DatabaseFixtureBase
@@ -17,6 +19,10 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable
     [Fact]
     public void Test1()
     {
-        var value = _context.Set<TestEntity>().ToList();
+        _context
+            .TestEntities
+            .ToList()
+            .Should()
+            .HaveCount(c => c > 0);
     }
 }
