@@ -41,9 +41,37 @@ public abstract class DatabaseFixtureBase : IDisposable
 
         context.TestEntities.RemoveRange(context.TestEntities);
 
-        context.TestEntities.AddRange(
-            new TestEntity(null),
-            new TestEntity(null));
+        // 1
+        context.TestEntities.Add(new TestEntity(null));
+        // 2
+        context.TestEntities.Add(new TestEntity(null));
+        // 3
+        context.TestEntities.Add(new TestEntity(null));
+        // 4
+        context.TestEntities.Add(new TestEntity(null));
+        // 5
+        context.TestEntities.Add(new TestEntity(null));
+        // 6
+        context.TestEntities.Add(new TestEntity(null));
+        // 7
+        context.TestEntities.Add(new TestEntity(null));
+        // 8
+        context.TestEntities.Add(new TestEntity(null));
+        // 9 > 10 > 11 > 12
+        var entity9 = new TestEntity(null);
+        var entity10 = new TestEntity(entity9);
+        var entity11 = new TestEntity(entity10);
+        var entity12 = new TestEntity(entity11);
+        context.TestEntities.Add(entity12);
+        // 9 > 13
+        var entity13 = new TestEntity(entity9);
+        context.TestEntities.Add(entity13);
+        // 9 > 14
+        var entity14 = new TestEntity(entity9);
+        context.TestEntities.Add(entity14);
+        // 9 > 15
+        var entity15 = new TestEntity(entity9);
+        context.TestEntities.Add(entity15);
 
         context.SaveChanges();
     }
