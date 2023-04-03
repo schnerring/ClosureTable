@@ -19,6 +19,35 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable
     }
 
     [Fact]
+    public void Roots_ShouldHaveCount_Of9()
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+
+        // Act
+        var roots = context.TestEntities.Roots<TestEntity, Guid>();
+
+        // Assert
+        roots.Should().HaveCount(9);
+    }
+
+    [Fact]
+    public void Roots_ShouldContain_Node1To9()
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+
+        // Act
+        var roots = context.TestEntities.Roots<TestEntity, Guid>().ToList();
+
+        // Assert
+        roots
+            .Select(entity => entity.Name)
+            .Should()
+            .BeEquivalentTo("1", "2", "3", "4", "5", "6", "7", "8", "9");
+    }
+
+    [Fact]
     public void Test1()
     {
         // Arrange
