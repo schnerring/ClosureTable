@@ -2,36 +2,43 @@
 
 namespace ClosureTable.Models;
 
-public class SelfReferencingEntity<TEntity, TKey>
-    where TEntity : SelfReferencingEntity<TEntity, TKey>
+public class SelfReferencingEntity<TSelf, TKey>
+    where TSelf : SelfReferencingEntity<TSelf, TKey>
     where TKey : notnull
 {
-    private readonly HashSet<AncestorDescendantRelationship<TEntity, TKey>>? _ancestorRelationships;
-    private readonly HashSet<TEntity>? _ancestors;
+    private readonly HashSet<AncestorDescendantRelationship<TSelf, TKey>>? _ancestorRelationships;
+    private readonly HashSet<TSelf>? _ancestors;
 
-    private readonly HashSet<AncestorDescendantRelationship<TEntity, TKey>>? _descendantRelationships;
-    private readonly HashSet<TEntity>? _descendants;
+    private readonly HashSet<TSelf>? _children;
 
-    public SelfReferencingEntity(TEntity? parent = null, int? position = null) : this()
+    private readonly HashSet<AncestorDescendantRelationship<TSelf, TKey>>? _descendantRelationships;
+    private readonly HashSet<TSelf>? _descendants;
+
+    public SelfReferencingEntity(TSelf? parent) : this()
     {
-        _ancestorRelationships = new HashSet<AncestorDescendantRelationship<TEntity, TKey>>
+        _ancestorRelationships = new HashSet<AncestorDescendantRelationship<TSelf, TKey>>
         {
             // Reflexivity
-            new((TEntity)this, (TEntity)this, 0)
+            new((TSelf)this, (TSelf)this, 0)
         };
 
-        _descendantRelationships = new HashSet<AncestorDescendantRelationship<TEntity, TKey>>();
+        _descendantRelationships = new HashSet<AncestorDescendantRelationship<TSelf, TKey>>();
 
-        if (position is > 0)
-            Position = position.Value;
+        _children = new HashSet<TSelf>();
+
+        // if (position is > 0)
+        //     Position = position.Value;
 
         SetParent(parent);
     }
 
     // Required for EF constructor binding. See: https://github.com/dotnet/efcore/issues/12078
-    private SelfReferencingEntity()
+    protected SelfReferencingEntity()
     {
         Id = default!;
+
+        ParentId = default!;
+        Parent = default!;
 
         _ancestors = default!;
         _ancestorRelationships = default!;
@@ -42,25 +49,27 @@ public class SelfReferencingEntity<TEntity, TKey>
 
     public TKey Id { get; }
 
-    // ReSharper disable once ReplaceAutoPropertyWithComputedProperty
-    public TKey? ParentId { get; } = default!;
-    public TEntity? Parent { get; private set; }
+    public TKey? ParentId { get; }
+    public TSelf? Parent { get; private set; }
 
-    public IReadOnlyCollection<TEntity> Ancestors =>
+    public IReadOnlyCollection<TSelf> Children =>
+        _children.AssertNavigationLoaded(nameof(Children));
+
+    public IReadOnlyCollection<TSelf> Ancestors =>
         _ancestors.AssertNavigationLoaded(nameof(Ancestors));
 
-    public IReadOnlyCollection<AncestorDescendantRelationship<TEntity, TKey>> AncestorRelationships =>
+    public IReadOnlyCollection<AncestorDescendantRelationship<TSelf, TKey>> AncestorRelationships =>
         _ancestorRelationships.AssertNavigationLoaded(nameof(AncestorRelationships));
 
-    public IReadOnlyCollection<TEntity> Descendants =>
+    public IReadOnlyCollection<TSelf> Descendants =>
         _descendants.AssertNavigationLoaded(nameof(Descendants));
 
-    public IReadOnlyCollection<AncestorDescendantRelationship<TEntity, TKey>> DescendantRelationships =>
+    public IReadOnlyCollection<AncestorDescendantRelationship<TSelf, TKey>> DescendantRelationships =>
         _descendantRelationships.AssertNavigationLoaded(nameof(DescendantRelationships));
 
-    public int Position { get; }
+    // public int Position { get; }
 
-    public void SetParent(TEntity? parent)
+    public void SetParent(TSelf? parent)
     {
         if (parent == this)
             throw new InvalidOperationException("Cannot set parent to self");
