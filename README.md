@@ -2,6 +2,20 @@
 
 Store self-referencing hierarchies with .NET and Entity Framework.
 
+## Getting Started
+
+## Examples
+
+### Root / Parent
+
+```csharp
+context.Entities.Roots<MyEntity, int>()
+```
+
+### Ancestors
+
+### Descendants
+
 ## See Also
 
 ### Curiously Recurring Template Pattern
