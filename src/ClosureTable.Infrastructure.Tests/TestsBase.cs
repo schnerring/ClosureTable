@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClosureTable.Infrastructure.Tests;
 
@@ -41,7 +42,7 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IAsyncLifet
         using var context = _fixture.CreateContext();
 
         // Act
-        var roots = context.TestEntities.Roots<TestEntity, Guid>().ToList();
+        var roots = context.TestEntities.Roots<TestEntity, Guid>();
 
         // Assert
         roots
@@ -59,7 +60,6 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IAsyncLifet
         // Assert
         context
             .TestEntities
-            .ToList()
             .Should()
             .HaveCount(15);
     }
@@ -100,7 +100,7 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IAsyncLifet
     [InlineData("13", 2)]
     [InlineData("14", 2)]
     [InlineData("15", 2)]
-    public void Test3(string entityName, int expectedAncestorCount)
+    public void GetAncestorRelationships_WithSelf_ShouldHaveExpectedCount(string entityName, int expectedAncestorCount)
     {
         // Arrange
         using var context = _fixture.CreateContext();
@@ -133,7 +133,7 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IAsyncLifet
     [InlineData("13", 1)]
     [InlineData("14", 1)]
     [InlineData("15", 1)]
-    public void Test4(string entityName, int expectedAncestorCount)
+    public void GetAncestorRelationships_WithoutSelf_ShouldHaveExpectedCount(string entityName, int expectedAncestorCount)
     {
         // Arrange
         using var context = _fixture.CreateContext();
@@ -148,5 +148,73 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IAsyncLifet
         relationships
             .Should()
             .HaveCount(expectedAncestorCount);
+    }
+
+    [Theory]
+    [InlineData("1", 1)]
+    [InlineData("2", 1)]
+    [InlineData("3", 1)]
+    [InlineData("4", 1)]
+    [InlineData("5", 1)]
+    [InlineData("6", 1)]
+    [InlineData("7", 1)]
+    [InlineData("8", 1)]
+    [InlineData("9", 7)]
+    [InlineData("10", 3)]
+    [InlineData("11", 2)]
+    [InlineData("12", 1)]
+    [InlineData("13", 1)]
+    [InlineData("14", 1)]
+    [InlineData("15", 1)]
+    public void GetDescendantRelationships_WithSelf_ShouldHaveExpectedCount(string entityName, int expectedDescendantCount)
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+        var entity = context.TestEntities.First(entity => entity.Name == entityName);
+
+        // Act
+        var relationships = context
+            .TestRelationships
+            .GetDescendantRelationships(entity.Id, true);
+
+        // Assert
+        relationships
+            .Should()
+            .HaveCount(expectedDescendantCount);
+    }
+
+    [Theory]
+    [InlineData("1", 0)]
+    [InlineData("2", 0)]
+    [InlineData("3", 0)]
+    [InlineData("4", 0)]
+    [InlineData("5", 0)]
+    [InlineData("6", 0)]
+    [InlineData("7", 0)]
+    [InlineData("8", 0)]
+    [InlineData("9", 6)]
+    [InlineData("10", 2)]
+    [InlineData("11", 1)]
+    [InlineData("12", 0)]
+    [InlineData("13", 0)]
+    [InlineData("14", 0)]
+    [InlineData("15", 0)]
+    public void GetDescendantRelationships_WithoutSelf_ShouldHaveExpectedCount(string entityName, int expectedDescendantCount)
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+        var entity = context
+            .TestEntities
+            .First(entity => entity.Name == entityName);
+
+        // Act
+        var relationships = context
+            .TestRelationships
+            .GetDescendantRelationships(entity.Id, false);
+
+        // Assert
+        relationships
+            .Should()
+            .HaveCount(expectedDescendantCount);
     }
 }

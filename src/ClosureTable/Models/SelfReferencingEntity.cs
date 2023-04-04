@@ -77,5 +77,29 @@ public class SelfReferencingEntity<TSelf, TKey>
             throw new InvalidOperationException("Cannot set parent to self");
 
         Parent = parent;
+
+        var ancestorRelationships =
+            _ancestorRelationships.AssertNavigationLoaded(nameof(AncestorRelationships));
+
+        var descendantRelationships =
+            _descendantRelationships.AssertNavigationLoaded(nameof(DescendantRelationships));
+
+        if (parent is not null)
+            // Copy each of parent's ancestor relationships, change descendant to self, and increment depth
+            foreach (var ancestorRelationship in parent.AncestorRelationships)
+                ancestorRelationships.Add(
+                    new AncestorDescendantRelationship<TSelf, TKey>(
+                        ancestorRelationship.Ancestor,
+                        (TSelf)this,
+                        ancestorRelationship.Depth + 1));
+
+        // Only recurse into children (direct descendants)
+        var childEntities = descendantRelationships
+            .Where(relationship => relationship.Depth == 1)
+            .Select(relationship => relationship.Descendant);
+
+        // Re-build ancestor relationships of children
+        foreach (var childEntity in childEntities)
+            childEntity.SetParent((TSelf)this);
     }
 }
