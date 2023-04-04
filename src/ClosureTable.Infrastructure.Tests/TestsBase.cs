@@ -2,7 +2,7 @@ using FluentAssertions;
 
 namespace ClosureTable.Infrastructure.Tests;
 
-public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable where TFixture : DatabaseFixtureBase
+public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IAsyncLifetime where TFixture : DatabaseFixtureBase
 {
     private readonly TFixture _fixture;
 
@@ -11,11 +11,14 @@ public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IDisposable
         _fixture = fixture;
     }
 
-    public void Dispose()
+    public async Task InitializeAsync()
     {
-        _fixture.Cleanup();
+        await _fixture.ReseedAsync();
+    }
 
-        GC.SuppressFinalize(this);
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
     }
 
     [Fact]

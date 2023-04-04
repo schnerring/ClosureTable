@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Respawn;
 
 namespace ClosureTable.Infrastructure.Tests.SqlServer;
 
@@ -13,6 +14,8 @@ public class DatabaseFixture<TTest> : DatabaseFixtureBase where TTest : IClassFi
     // ReSharper disable once StaticMemberInGenericType
     // Get a separate field for each test class
     private static readonly string ConnectionString;
+
+    private Respawner? _respawner;
 
     static DatabaseFixture()
     {
@@ -32,5 +35,11 @@ public class DatabaseFixture<TTest> : DatabaseFixtureBase where TTest : IClassFi
             .UseSqlServer(ConnectionString)
             .Options)
     {
+    }
+
+    protected override async Task ResetDatabaseAsync()
+    {
+        _respawner ??= await Respawner.CreateAsync(ConnectionString);
+        await _respawner.ResetAsync(ConnectionString);
     }
 }
