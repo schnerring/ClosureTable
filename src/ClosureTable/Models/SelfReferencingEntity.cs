@@ -60,11 +60,17 @@ public class SelfReferencingEntity<TSelf, TKey>
     public IReadOnlyCollection<TSelf> Ancestors =>
         _ancestors.AssertNavigationLoaded(nameof(Ancestors));
 
+    public IReadOnlyCollection<TSelf> AncestorsWithoutSelf =>
+        Ancestors.Where(ancestor => ancestor != this).ToList();
+
     public IReadOnlyCollection<AncestorDescendantRelationship<TSelf, TKey>> AncestorRelationships =>
         _ancestorRelationships.AssertNavigationLoaded(nameof(AncestorRelationships));
 
     public IReadOnlyCollection<TSelf> Descendants =>
         _descendants.AssertNavigationLoaded(nameof(Descendants));
+
+    public IReadOnlyCollection<TSelf> DescendantsWithoutSelf =>
+        Descendants.Where(descendant => descendant != this).ToList();
 
     public IReadOnlyCollection<AncestorDescendantRelationship<TSelf, TKey>> DescendantRelationships =>
         _descendantRelationships.AssertNavigationLoaded(nameof(DescendantRelationships));
