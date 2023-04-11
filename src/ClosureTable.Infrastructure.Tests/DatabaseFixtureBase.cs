@@ -51,37 +51,49 @@ public abstract class DatabaseFixtureBase : IAsyncLifetime
     {
         await using var context = CreateContext();
 
-        // 1
-        await context.TestEntities.AddAsync(new TestEntity(null, "1"));
-        // 2
-        await context.TestEntities.AddAsync(new TestEntity(null, "2"));
-        // 3
-        await context.TestEntities.AddAsync(new TestEntity(null, "3"));
-        // 4
-        await context.TestEntities.AddAsync(new TestEntity(null, "4"));
-        // 5
-        await context.TestEntities.AddAsync(new TestEntity(null, "5"));
-        // 6
-        await context.TestEntities.AddAsync(new TestEntity(null, "6"));
-        // 7
-        await context.TestEntities.AddAsync(new TestEntity(null, "7"));
-        // 8
-        await context.TestEntities.AddAsync(new TestEntity(null, "8"));
-        // 9 > 10 > 11 > 12
-        var entity9 = new TestEntity(null, "9");
-        var entity10 = new TestEntity(entity9, "10");
-        var entity11 = new TestEntity(entity10, "11");
-        var entity12 = new TestEntity(entity11, "12");
-        await context.TestEntities.AddAsync(entity12);
-        // 9 > 13
-        var entity13 = new TestEntity(entity9, "13");
-        await context.TestEntities.AddAsync(entity13);
-        // 9 > 14
-        var entity14 = new TestEntity(entity9, "14");
-        await context.TestEntities.AddAsync(entity14);
-        // 9 > 15
-        var entity15 = new TestEntity(entity9, "15");
-        await context.TestEntities.AddAsync(entity15);
+        // ```goat
+        // roots:  A    B    C    D    E    F    G    H    I
+        //                                                 |
+        //                                              .--+--.
+        //                                             |   |   |
+        //                                             J   M   N
+        //                                             |
+        //                                             K
+        //                                             |
+        //                                             L
+        // ```
+
+        // A
+        await context.TestEntities.AddAsync(new TestEntity(null, "A"));
+        // B
+        await context.TestEntities.AddAsync(new TestEntity(null, "B"));
+        // C
+        await context.TestEntities.AddAsync(new TestEntity(null, "C"));
+        // D
+        await context.TestEntities.AddAsync(new TestEntity(null, "D"));
+        // E
+        await context.TestEntities.AddAsync(new TestEntity(null, "E"));
+        // F
+        await context.TestEntities.AddAsync(new TestEntity(null, "F"));
+        // G
+        await context.TestEntities.AddAsync(new TestEntity(null, "G"));
+        // H
+        await context.TestEntities.AddAsync(new TestEntity(null, "H"));
+        // I > J > K > L
+        var entityI = new TestEntity(null, "I");
+        var entityJ = new TestEntity(entityI, "J");
+        var entityK = new TestEntity(entityJ, "K");
+        var entityL = new TestEntity(entityK, "L");
+        await context.TestEntities.AddAsync(entityL);
+        // I > M
+        var entityM = new TestEntity(entityI, "M");
+        await context.TestEntities.AddAsync(entityM);
+        // I > N
+        var entityN = new TestEntity(entityI, "N");
+        await context.TestEntities.AddAsync(entityN);
+        // I > O
+        var entityO = new TestEntity(entityI, "O");
+        await context.TestEntities.AddAsync(entityO);
 
         await context.SaveChangesAsync();
     }

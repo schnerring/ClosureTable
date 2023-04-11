@@ -6,10 +6,22 @@ Store self-referencing hierarchies with .NET and Entity Framework.
 
 ## Examples
 
+```goat
+roots:  A    B    C    D    E    F    G    H    I
+                                                |
+                                             .--+--.
+                                            |   |   |
+                                            J   M   N
+                                            |
+                                            K
+                                            |
+                                            L
+```
+
 ### Root / Parent
 
 ```csharp
-context.Entities.Roots<MyEntity, int>()
+context.Entities.Roots<MyEntity, int>() // [A..I]
 ```
 
 ### Ancestors
