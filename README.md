@@ -35,7 +35,7 @@ Let `var l = context.TestEntities.First(e => e.Name == "L")`:
 | `l.Ancestors.Any()`            | `true`         |
 | `l.AncestorsWithoutSelf`       | `[I, J, K]`    |
 | `l.AncestorsWithoutSelf.Count` | `3`            |
-| `l.Ancestors.Any()`            | `true`         |
+| `l.AncestorsWithoutSelf.Any()` | `true`         |
 
 Let `var i = context.TestEntities.First(e => e.Name == "I")`:
 
@@ -46,9 +46,31 @@ Let `var i = context.TestEntities.First(e => e.Name == "I")`:
 | `i.Ancestors.Any()`            | `true`  |
 | `i.AncestorsWithoutSelf`       | `[]`    |
 | `i.AncestorsWithoutSelf.Count` | `0`     |
-| `i.Ancestors.Any()`            | `false` |
+| `i.AncestorsWithoutSelf.Any()` | `false` |
 
 ### Descendants
+
+Let `var l = context.TestEntities.First(e => e.Name == "L")`:
+
+| Property                         | Value   |
+| -------------------------------- | ------- |
+| `l.Descendants`                  | `[L]`   |
+| `l.Descendants.Count`            | `1`     |
+| `l.Descendants.Any()`            | `true`  |
+| `l.DescendantsWithoutSelf`       | `[]`    |
+| `l.DescendantsWithoutSelf.Count` | `0`     |
+| `l.DescendantsWithoutSelf.Any()` | `false` |
+
+Let `var i = context.TestEntities.First(e => e.Name == "I")`:
+
+| Property                         | Value                   |
+| -------------------------------- | ----------------------- |
+| `i.Descendants`                  | `[I, J, K, L, M, N, O]` |
+| `i.Descendants.Count`            | `7`                     |
+| `i.Descendants.Any()`            | `true`                  |
+| `i.DescendantsWithoutSelf`       | `[J, K, L, M, N, O]`    |
+| `i.DescendantsWithoutSelf.Count` | `6`                     |
+| `i.DescendantsWithoutSelf.Any()` | `true`                  |
 
 ## See Also
 

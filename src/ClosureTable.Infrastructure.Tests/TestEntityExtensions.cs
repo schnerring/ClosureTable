@@ -2,7 +2,7 @@
 
 namespace ClosureTable.Infrastructure.Tests;
 
-public  static class TestEntityExtensions
+public static class TestEntityExtensions
 {
     public static IQueryable<TEntity> Roots<TEntity, TKey>(this IQueryable<TEntity> @this)
         where TEntity : SelfReferencingEntity<TEntity, TKey>
