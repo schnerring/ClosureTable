@@ -54,13 +54,13 @@ public abstract class DatabaseFixtureBase : IAsyncLifetime
         // ```goat
         // roots:  A    B    C    D    E    F    G    H    I
         //                                                 |
-        //                                              .--+--.
-        //                                             |   |   |
-        //                                             J   M   N
-        //                                             |
-        //                                             K
-        //                                             |
-        //                                             L
+        //                                            .--+-+-+--.
+        //                                           |   |   |   |
+        //                                           J   M   N   O
+        //                                           |
+        //                                           K
+        //                                           |
+        //                                           L
         // ```
 
         // A

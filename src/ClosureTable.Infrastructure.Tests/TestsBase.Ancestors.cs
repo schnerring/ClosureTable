@@ -1,0 +1,115 @@
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+
+namespace ClosureTable.Infrastructure.Tests;
+
+public abstract partial class TestsBase<TFixture>
+{
+    [Fact]
+    public void AncestorsWithSelf_OfNewEntity_ShouldOnlyContainSelf()
+    {
+        // Arrange
+        static TestEntity Act() => new(null, "foo");
+
+        // Act
+        var newEntity = Act();
+
+        // Assert
+        newEntity.Ancestors.Should().ContainSingle(ancestor => ancestor == newEntity);
+    }
+
+    [Fact]
+    public void AncestorsWithoutSelf_OfNewEntity_ShouldBeEmpty()
+    {
+        // Arrange
+        static TestEntity Act() => new(null, "foo");
+
+        // Act
+        var newEntity = Act();
+
+        // Assert
+        newEntity.AncestorsWithoutSelf.Should().BeEmpty();
+    }
+
+    [Theory]
+    [InlineData("A", new[] { "A" })]
+    [InlineData("B", new[] { "B" })]
+    [InlineData("C", new[] { "C" })]
+    [InlineData("D", new[] { "D" })]
+    [InlineData("E", new[] { "E" })]
+    [InlineData("F", new[] { "F" })]
+    [InlineData("G", new[] { "G" })]
+    [InlineData("H", new[] { "H" })]
+    [InlineData("I", new[] { "I" })]
+    [InlineData("J", new[] { "I", "J" })]
+    [InlineData("K", new[] { "I", "J", "K" })]
+    [InlineData("L", new[] { "I", "J", "K", "L" })]
+    [InlineData("M", new[] { "I", "M" })]
+    [InlineData("N", new[] { "I", "N" })]
+    [InlineData("O", new[] { "I", "O" })]
+    public void AncestorsWithSelf_OfTestDataEntity_ShouldContainExpectedAncestors(
+        string testEntityName,
+        string[] expectedAncestorNames)
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+
+        var sut = context
+            .TestEntities
+            .Include(entity => entity.Ancestors)
+            .First(entity => entity.Name == testEntityName);
+
+        var expectedAncestors = context
+            .TestEntities
+            .Where(entity => expectedAncestorNames.Contains(entity.Name));
+
+        // Act
+        var actualAncestors = sut.Ancestors;
+
+        // Assert
+        actualAncestors
+            .Should()
+            .BeEquivalentTo(expectedAncestors);
+    }
+
+    [Theory]
+    [InlineData("A", new string[0])]
+    [InlineData("B", new string[0])]
+    [InlineData("C", new string[0])]
+    [InlineData("D", new string[0])]
+    [InlineData("E", new string[0])]
+    [InlineData("F", new string[0])]
+    [InlineData("G", new string[0])]
+    [InlineData("H", new string[0])]
+    [InlineData("I", new string[0])]
+    [InlineData("J", new[] { "I" })]
+    [InlineData("K", new[] { "I", "J" })]
+    [InlineData("L", new[] { "I", "J", "K" })]
+    [InlineData("M", new[] { "I" })]
+    [InlineData("N", new[] { "I" })]
+    [InlineData("O", new[] { "I" })]
+    public void AncestorsWithoutSelf_OfTestDataEntity_ShouldContainExpectedAncestors(
+        string testEntityName,
+        string[] expectedAncestorNames)
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+
+        var sut = context
+            .TestEntities
+            .Include(entity => entity.Ancestors)
+            .First(entity => entity.Name == testEntityName);
+
+        var expectedAncestors = context
+            .TestEntities
+            .Where(entity => expectedAncestorNames.Contains(entity.Name));
+
+        // Act
+        var actualAncestors = sut.AncestorsWithoutSelf;
+
+        // Assert
+        actualAncestors
+            .Should()
+            .BeEquivalentTo(expectedAncestors);
+    }
+}

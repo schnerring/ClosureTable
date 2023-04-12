@@ -6,8 +6,8 @@ namespace ClosureTable.Infrastructure.Tests.SqlServer;
 
 public class DatabaseFixture<TTest> : DatabaseFixtureBase where TTest : IClassFixture<DatabaseFixture<TTest>>
 {
-    // Default connection string for local development
-    // Requires SQL Server Express LocalDB
+    // Default connection string for local development environment.
+    // Requires installation of SQL Server Express LocalDB.
     private const string DefaultConnectionStringTemplate =
         @"Server=(LocalDb)\MSSQLLocalDB;Database={databasePlaceholder};Integrated Security=True";
 

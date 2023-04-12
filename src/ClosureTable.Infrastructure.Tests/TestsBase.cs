@@ -1,9 +1,8 @@
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 
 namespace ClosureTable.Infrastructure.Tests;
 
-public abstract class TestsBase<TFixture> : IClassFixture<TFixture>, IAsyncLifetime where TFixture : DatabaseFixtureBase
+public abstract partial class TestsBase<TFixture> : IClassFixture<TFixture>, IAsyncLifetime where TFixture : DatabaseFixtureBase
 {
     private readonly TFixture _fixture;
 

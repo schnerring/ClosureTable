@@ -16,13 +16,13 @@ public class SelfReferencingEntity<TSelf, TKey>
 
     public SelfReferencingEntity(TSelf? parent) : this()
     {
-        _ancestorRelationships = new HashSet<AncestorDescendantRelationship<TSelf, TKey>>
-        {
-            // Reflexivity
-            new((TSelf)this, (TSelf)this, 0)
-        };
+        var reflexiveRelationship = new AncestorDescendantRelationship<TSelf, TKey>((TSelf)this, (TSelf)this, 0);
 
-        _descendantRelationships = new HashSet<AncestorDescendantRelationship<TSelf, TKey>>();
+        _ancestors = new HashSet<TSelf> { (TSelf)this };
+        _ancestorRelationships = new HashSet<AncestorDescendantRelationship<TSelf, TKey>> { reflexiveRelationship };
+
+        _descendants = new HashSet<TSelf> { (TSelf)this };
+        _descendantRelationships = new HashSet<AncestorDescendantRelationship<TSelf, TKey>> { reflexiveRelationship };
 
         _children = new HashSet<TSelf>();
 
