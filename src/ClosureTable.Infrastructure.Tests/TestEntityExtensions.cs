@@ -11,6 +11,7 @@ public static class TestEntityExtensions
         return @this.Where(entity => entity.ParentId.Equals(null));
     }
 
+    // TODO: private query builder
     public static IQueryable<AncestorDescendantRelationship<TEntity, TKey>> GetAncestorRelationships<TEntity, TKey>(
         this IQueryable<AncestorDescendantRelationship<TEntity, TKey>> @this,
         TKey id,
@@ -26,6 +27,7 @@ public static class TestEntityExtensions
         return query;
     }
 
+    // TODO: private query builder
     public static IQueryable<AncestorDescendantRelationship<TEntity, TKey>> GetDescendantRelationships<TEntity, TKey>(
         this IQueryable<AncestorDescendantRelationship<TEntity, TKey>> @this,
         TKey id,

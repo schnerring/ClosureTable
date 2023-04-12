@@ -14,9 +14,11 @@ public abstract class DatabaseFixtureBase : IAsyncLifetime
             .Build();
     }
 
-    protected DatabaseFixtureBase(DbContextOptions options)
+    protected DatabaseFixtureBase(DbContextOptionsBuilder builder)
     {
-        _options = options;
+        _options = builder
+            .LogTo(Console.WriteLine)
+            .Options;
     }
 
     protected static IConfiguration Configuration { get; }

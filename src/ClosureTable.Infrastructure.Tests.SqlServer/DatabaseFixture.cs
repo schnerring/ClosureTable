@@ -30,10 +30,7 @@ public class DatabaseFixture<TTest> : DatabaseFixtureBase where TTest : IClassFi
         ConnectionString = connectionStringTemplate.Replace("{databasePlaceholder}", typeof(TTest).FullName);
     }
 
-    public DatabaseFixture() : base(
-        new DbContextOptionsBuilder<TestContext>()
-            .UseSqlServer(ConnectionString)
-            .Options)
+    public DatabaseFixture() : base(new DbContextOptionsBuilder<TestContext>().UseSqlServer(ConnectionString))
     {
     }
 
