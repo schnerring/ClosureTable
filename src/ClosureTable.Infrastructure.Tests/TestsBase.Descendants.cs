@@ -48,7 +48,7 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("N", new[] { "N" })]
     [InlineData("O", new[] { "O" })]
     public void DescendantsWithSelf_OfTestDataEntity_ShouldContainExpectedDescendants(
-        string testEntityName,
+        string entityName,
         string[] expectedDescendantNames)
     {
         // Arrange
@@ -57,7 +57,7 @@ public abstract partial class TestsBase<TFixture>
         var sut = context
             .TestEntities
             .Include(entity => entity.Descendants)
-            .First(entity => entity.Name == testEntityName);
+            .First(entity => entity.Name == entityName);
 
         var expectedDescendants = context
             .TestEntities
@@ -89,7 +89,7 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("N", new string[0])]
     [InlineData("O", new string[0])]
     public void DescendantsWithoutSelf_OfTestDataEntity_ShouldContainExpectedDescendants(
-        string testEntityName,
+        string entityName,
         string[] expectedDescendantNames)
     {
         // Arrange
@@ -98,7 +98,7 @@ public abstract partial class TestsBase<TFixture>
         var sut = context
             .TestEntities
             .Include(entity => entity.Descendants)
-            .First(entity => entity.Name == testEntityName);
+            .First(entity => entity.Name == entityName);
 
         var expectedDescendants = context
             .TestEntities

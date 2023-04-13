@@ -48,7 +48,7 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("N", new[] { "I", "N" })]
     [InlineData("O", new[] { "I", "O" })]
     public void AncestorsWithSelf_OfTestDataEntity_ShouldContainExpectedAncestors(
-        string testEntityName,
+        string entityName,
         string[] expectedAncestorNames)
     {
         // Arrange
@@ -57,7 +57,7 @@ public abstract partial class TestsBase<TFixture>
         var sut = context
             .TestEntities
             .Include(entity => entity.Ancestors)
-            .First(entity => entity.Name == testEntityName);
+            .First(entity => entity.Name == entityName);
 
         var expectedAncestors = context
             .TestEntities
@@ -89,7 +89,7 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("N", new[] { "I" })]
     [InlineData("O", new[] { "I" })]
     public void AncestorsWithoutSelf_OfTestDataEntity_ShouldContainExpectedAncestors(
-        string testEntityName,
+        string entityName,
         string[] expectedAncestorNames)
     {
         // Arrange
@@ -98,7 +98,7 @@ public abstract partial class TestsBase<TFixture>
         var sut = context
             .TestEntities
             .Include(entity => entity.Ancestors)
-            .First(entity => entity.Name == testEntityName);
+            .First(entity => entity.Name == entityName);
 
         var expectedAncestors = context
             .TestEntities
