@@ -7,11 +7,13 @@ namespace ClosureTable.Infrastructure;
 public static partial class DbContextExtensions
 {
     private static Expression<Func<AncestorDescendantRelationship<TEntity, TKey>, bool>>
-        AncestorsPredicate<TEntity, TKey>(TKey id)
+        AncestorsPredicate<TEntity, TKey>(TKey id, bool includeSelf)
         where TEntity : SelfReferencingEntity<TEntity, TKey>
         where TKey : struct
     {
-        return relationship => relationship.DescendantId.Equals(id) && relationship.Depth > 0;
+        var minDepth = includeSelf ? 0 : 1;
+        return relationship => relationship.DescendantId.Equals(id) &&
+                               relationship.Depth >= minDepth;
     }
 
     public static bool HasAncestors<TEntity, TKey>(
@@ -23,7 +25,7 @@ public static partial class DbContextExtensions
         return @this
             .Set<AncestorDescendantRelationship<TEntity, TKey>>()
             .AsNoTracking()
-            .Any(AncestorsPredicate<TEntity, TKey>(id));
+            .Any(AncestorsPredicate<TEntity, TKey>(id, false));
     }
 
     public static async Task<bool> HasAncestorsAsync<TEntity, TKey>(
@@ -36,7 +38,7 @@ public static partial class DbContextExtensions
         return await @this
             .Set<AncestorDescendantRelationship<TEntity, TKey>>()
             .AsNoTracking()
-            .AnyAsync(AncestorsPredicate<TEntity, TKey>(id), cancellationToken);
+            .AnyAsync(AncestorsPredicate<TEntity, TKey>(id, false), cancellationToken);
     }
 
     public static int AncestorsCount<TEntity, TKey>(
@@ -48,7 +50,7 @@ public static partial class DbContextExtensions
         return @this
             .Set<AncestorDescendantRelationship<TEntity, TKey>>()
             .AsNoTracking()
-            .Count(AncestorsPredicate<TEntity, TKey>(id));
+            .Count(AncestorsPredicate<TEntity, TKey>(id, false));
     }
 
     public static async Task<int> AncestorsCountAsync<TEntity, TKey>(
@@ -61,6 +63,6 @@ public static partial class DbContextExtensions
         return await @this
             .Set<AncestorDescendantRelationship<TEntity, TKey>>()
             .AsNoTracking()
-            .CountAsync(AncestorsPredicate<TEntity, TKey>(id), cancellationToken);
+            .CountAsync(AncestorsPredicate<TEntity, TKey>(id, false), cancellationToken);
     }
 }

@@ -10,36 +10,4 @@ public static class TestEntityExtensions
     {
         return @this.Where(entity => entity.ParentId.Equals(null));
     }
-
-    // TODO: private query builder
-    public static IQueryable<AncestorDescendantRelationship<TEntity, TKey>> GetAncestorRelationships<TEntity, TKey>(
-        this IQueryable<AncestorDescendantRelationship<TEntity, TKey>> @this,
-        TKey id,
-        bool includeSelf)
-        where TEntity : SelfReferencingEntity<TEntity, TKey>
-        where TKey : struct
-    {
-        var query = @this.Where(relationship => relationship.DescendantId.Equals(id));
-
-        if (!includeSelf)
-            query = query.Where(relationship => relationship.Depth > 0);
-
-        return query;
-    }
-
-    // TODO: private query builder
-    public static IQueryable<AncestorDescendantRelationship<TEntity, TKey>> GetDescendantRelationships<TEntity, TKey>(
-        this IQueryable<AncestorDescendantRelationship<TEntity, TKey>> @this,
-        TKey id,
-        bool includeSelf)
-        where TEntity : SelfReferencingEntity<TEntity, TKey>
-        where TKey : struct
-    {
-        var query = @this.Where(relationship => relationship.AncestorId.Equals(id));
-
-        if (!includeSelf)
-            query = query.Where(relationship => relationship.Depth > 0);
-
-        return query;
-    }
 }
