@@ -6,6 +6,30 @@ Store self-referencing hierarchies with .NET and Entity Framework.
 
 ## Examples
 
+### Test Model And Data
+
+The following model is used for integration testing (**TODO** link):
+
+```csharp
+public class TestEntity : SelfReferencingEntity<TestEntity, Guid>
+{
+    public string Name { get; }
+
+    public TestEntity(TestEntity? parent, string name) : base(parent)
+    {
+        Name = name;
+    }
+
+    // Required for EF constructor binding. See: https://github.com/dotnet/efcore/issues/12078
+    private TestEntity()
+    {
+        Name = default!;
+    }
+}
+```
+
+The following data is used for integration testing (**TODO** link):
+
 ```goat
 roots:  A    B    C    D    E    F    G    H    I
                                                 |
