@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClosureTable.Infrastructure.Tests;
 
-public abstract partial class TestsBase<TFixture> : IClassFixture<TFixture>, IAsyncLifetime
+public abstract partial class SelfReferencingEntityTestsBase<TFixture> : IClassFixture<TFixture>, IAsyncLifetime
     where TFixture : DatabaseFixtureBase
 {
     private readonly TFixture _fixture;
 
-    protected TestsBase(TFixture fixture)
+    protected SelfReferencingEntityTestsBase(TFixture fixture)
     {
         _fixture = fixture;
     }

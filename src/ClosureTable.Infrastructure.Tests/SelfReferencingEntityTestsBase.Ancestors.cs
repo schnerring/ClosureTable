@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClosureTable.Infrastructure.Tests;
 
-public abstract partial class TestsBase<TFixture>
+public abstract partial class SelfReferencingEntityTestsBase<TFixture>
 {
     [Fact]
     public void AncestorsWithSelf_OfNewEntity_ShouldOnlyContainSelf()
