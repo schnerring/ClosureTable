@@ -57,6 +57,10 @@ public class SelfReferencingEntity<TEntity, TKey>
     public IReadOnlyCollection<TEntity> Children =>
         _children.AssertNavigationLoaded(nameof(Children));
 
+    public bool IsParent => Children.Any();
+
+    public bool IsRoot => Parent is null;
+
     public IReadOnlyCollection<TEntity> Ancestors =>
         _ancestors.AssertNavigationLoaded(nameof(Ancestors));
 

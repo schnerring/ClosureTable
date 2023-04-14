@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace ClosureTable.Infrastructure.Tests;
 
@@ -17,7 +18,7 @@ public abstract class DatabaseFixtureBase : IAsyncLifetime
     protected DatabaseFixtureBase(DbContextOptionsBuilder builder)
     {
         _options = builder
-            .LogTo(Console.WriteLine)
+            .LogTo(Console.WriteLine, LogLevel.Information)
             .Options;
     }
 
