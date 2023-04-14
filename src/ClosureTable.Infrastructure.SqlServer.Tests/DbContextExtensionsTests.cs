@@ -1,4 +1,6 @@
-﻿namespace ClosureTable.Infrastructure.Tests.SqlServer;
+﻿using ClosureTable.Infrastructure.Tests;
+
+namespace ClosureTable.Infrastructure.SqlServer.Tests;
 
 public class DbContextExtensionsTests : DbContextExtensionsTestsBase<DatabaseFixture<DbContextExtensionsTests>>
 {

@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosureTable.Infrastructure
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosureTable.Infrastructure.Tests", "ClosureTable.Infrastructure.Tests\ClosureTable.Infrastructure.Tests.csproj", "{470FFAD2-CA60-4F2D-99F6-3F4B6DAAC0C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosureTable.Infrastructure.Tests.SqlServer", "ClosureTable.Infrastructure.Tests.SqlServer\ClosureTable.Infrastructure.Tests.SqlServer.csproj", "{075659B8-B9F9-43F3-92F3-05F87852EAA7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClosureTable.Infrastructure.SqlServer.Tests", "ClosureTable.Infrastructure.SqlServer.Tests\ClosureTable.Infrastructure.SqlServer.Tests.csproj", "{075659B8-B9F9-43F3-92F3-05F87852EAA7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B1C79848-2274-44EB-86D6-2196143DE645}"
 	ProjectSection(SolutionItems) = preProject

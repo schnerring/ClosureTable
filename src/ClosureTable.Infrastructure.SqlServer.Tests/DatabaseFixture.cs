@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ClosureTable.Infrastructure.Tests;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Respawn;
 
-namespace ClosureTable.Infrastructure.Tests.SqlServer;
+namespace ClosureTable.Infrastructure.SqlServer.Tests;
 
 public class DatabaseFixture<TTest> : DatabaseFixtureBase where TTest : IClassFixture<DatabaseFixture<TTest>>
 {
