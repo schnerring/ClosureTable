@@ -1,7 +1,9 @@
-﻿using ClosureTable.Models;
+﻿using System.Diagnostics;
+using ClosureTable.Models;
 
 namespace ClosureTable.Infrastructure.Tests;
 
+[DebuggerDisplay("{Name}")]
 public class TestEntity : SelfReferencingEntity<TestEntity, Guid>
 {
     public string Name { get; }

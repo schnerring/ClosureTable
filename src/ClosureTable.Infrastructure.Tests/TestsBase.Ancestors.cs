@@ -47,7 +47,7 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("M", new[] { "I", "M" })]
     [InlineData("N", new[] { "I", "N" })]
     [InlineData("O", new[] { "I", "O" })]
-    public void AncestorsWithSelf_OfTestDataEntity_ShouldContainExpectedAncestors(
+    public void AncestorsWithSelf_OfTestDataEntity_ShouldBeExpectedAncestors(
         string entityName,
         string[] expectedAncestorNames)
     {
@@ -88,7 +88,7 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("M", new[] { "I" })]
     [InlineData("N", new[] { "I" })]
     [InlineData("O", new[] { "I" })]
-    public void AncestorsWithoutSelf_OfTestDataEntity_ShouldContainExpectedAncestors(
+    public void AncestorsWithoutSelf_OfTestDataEntity_ShouldBeExpectedAncestors(
         string entityName,
         string[] expectedAncestorNames)
     {

@@ -47,7 +47,7 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("M", new[] { "M" })]
     [InlineData("N", new[] { "N" })]
     [InlineData("O", new[] { "O" })]
-    public void DescendantsWithSelf_OfTestDataEntity_ShouldContainExpectedDescendants(
+    public void DescendantsWithSelf_OfTestDataEntity_ShouldBeExpectedDescendants(
         string entityName,
         string[] expectedDescendantNames)
     {
@@ -88,7 +88,7 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("M", new string[0])]
     [InlineData("N", new string[0])]
     [InlineData("O", new string[0])]
-    public void DescendantsWithoutSelf_OfTestDataEntity_ShouldContainExpectedDescendants(
+    public void DescendantsWithoutSelf_OfTestDataEntity_ShouldBeExpectedDescendants(
         string entityName,
         string[] expectedDescendantNames)
     {

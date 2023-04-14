@@ -65,4 +65,18 @@ public static partial class DbContextExtensions
             .AsNoTracking()
             .CountAsync(DescendantsPredicate<TEntity, TKey>(id, false), cancellationToken);
     }
+
+    public static IQueryable<SelfReferencingEntity<TEntity, TKey>> DescendantsOf<TEntity, TKey>(
+        this DbContext @this,
+        TKey id,
+        bool withSelf)
+        where TEntity : SelfReferencingEntity<TEntity, TKey>
+        where TKey : struct
+    {
+        return @this
+            .Set<AncestorDescendantRelationship<TEntity, TKey>>()
+            .Where(DescendantsPredicate<TEntity, TKey>(id, withSelf))
+            .Include(relationship => relationship.Descendant)
+            .Select(relationship => relationship.Descendant);
+    }
 }
