@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClosureTable.Infrastructure.Tests;
 
@@ -23,30 +24,36 @@ public abstract partial class TestsBase<TFixture> : IClassFixture<TFixture>, IAs
     }
 
     [Fact]
-    public void Roots_OfTestData_ShouldHaveCountOf9()
+    public async Task Roots_OfTestData_ShouldHaveCountOf9()
     {
         // Arrange
-        using var context = _fixture.CreateContext();
+        await using var context = _fixture.CreateContext();
 
         // Act
-        var roots = context.TestEntities.Roots<TestEntity, Guid>();
+        var roots = await context
+            .TestEntities
+            .Roots<TestEntity, Guid>()
+            .ToListAsync();
 
         // Assert
         roots.Should().HaveCount(9);
     }
 
     [Fact]
-    public void Roots_OfTestData_ShouldBeExpectedEntities()
+    public async Task Roots_OfTestData_ShouldBeExpectedEntities()
     {
         // Arrange
-        using var context = _fixture.CreateContext();
+        await using var context = _fixture.CreateContext();
 
         // Act
-        var roots = context.TestEntities.Roots<TestEntity, Guid>();
+        var roots = await context
+            .TestEntities
+            .Roots<TestEntity, Guid>()
+            .ToListAsync();
 
         // Assert
         roots
-            .Select(entity => entity.Name)
+            .Select(e => e.Name)
             .Should()
             .BeEquivalentTo("A", "B", "C", "D", "E", "F", "G", "H", "I");
     }

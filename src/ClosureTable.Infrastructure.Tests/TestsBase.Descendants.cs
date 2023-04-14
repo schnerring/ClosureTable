@@ -47,24 +47,25 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("M", new[] { "M" })]
     [InlineData("N", new[] { "N" })]
     [InlineData("O", new[] { "O" })]
-    public void DescendantsWithSelf_OfTestDataEntity_ShouldBeExpectedDescendants(
+    public async Task DescendantsWithSelf_OfTestDataEntity_ShouldBeExpectedDescendants(
         string entityName,
         string[] expectedDescendantNames)
     {
         // Arrange
-        using var context = _fixture.CreateContext();
+        await using var context = _fixture.CreateContext();
 
-        var sut = context
+        var entity = await context
             .TestEntities
-            .Include(entity => entity.Descendants)
-            .First(entity => entity.Name == entityName);
+            .Include(e => e.Descendants)
+            .FirstAsync(e => e.Name == entityName);
 
-        var expectedDescendants = context
+        var expectedDescendants = await context
             .TestEntities
-            .Where(entity => expectedDescendantNames.Contains(entity.Name));
+            .Where(e => expectedDescendantNames.Contains(e.Name))
+            .ToListAsync();
 
         // Act
-        var actualDescendants = sut.Descendants;
+        var actualDescendants = entity.Descendants;
 
         // Assert
         actualDescendants
@@ -88,24 +89,25 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("M", new string[0])]
     [InlineData("N", new string[0])]
     [InlineData("O", new string[0])]
-    public void DescendantsWithoutSelf_OfTestDataEntity_ShouldBeExpectedDescendants(
+    public async Task DescendantsWithoutSelf_OfTestDataEntity_ShouldBeExpectedDescendants(
         string entityName,
         string[] expectedDescendantNames)
     {
         // Arrange
-        using var context = _fixture.CreateContext();
+        await using var context = _fixture.CreateContext();
 
-        var sut = context
+        var entity = await context
             .TestEntities
-            .Include(entity => entity.Descendants)
-            .First(entity => entity.Name == entityName);
+            .Include(e => e.Descendants)
+            .FirstAsync(e => e.Name == entityName);
 
-        var expectedDescendants = context
+        var expectedDescendants = await context
             .TestEntities
-            .Where(entity => expectedDescendantNames.Contains(entity.Name));
+            .Where(e => expectedDescendantNames.Contains(e.Name))
+            .ToListAsync();
 
         // Act
-        var actualDescendants = sut.DescendantsWithoutSelf;
+        var actualDescendants = entity.DescendantsWithoutSelf;
 
         // Assert
         actualDescendants

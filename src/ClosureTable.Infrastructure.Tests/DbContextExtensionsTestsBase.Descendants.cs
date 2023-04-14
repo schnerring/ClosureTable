@@ -26,14 +26,14 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
         // Arrange
         await using var context = _fixture.CreateContext();
 
-        var sut = context
+        var entity = await context
             .TestEntities
             .AsNoTracking()
-            .First(e => e.Name == entityName);
+            .FirstAsync(e => e.Name == entityName);
 
         // Act
         // ReSharper disable once MethodHasAsyncOverload
-        var actual = context.HasDescendants<TestEntity, Guid>(sut.Id);
+        var actual = context.HasDescendants<TestEntity, Guid>(entity.Id);
 
         // Assert
         actual.Should().Be(expected);
@@ -60,13 +60,13 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
         // Arrange
         await using var context = _fixture.CreateContext();
 
-        var sut = context
+        var entity = await context
             .TestEntities
             .AsNoTracking()
-            .First(e => e.Name == entityName);
+            .FirstAsync(e => e.Name == entityName);
 
         // Act
-        var actual = await context.HasDescendantsAsync<TestEntity, Guid>(sut.Id);
+        var actual = await context.HasDescendantsAsync<TestEntity, Guid>(entity.Id);
 
         // Assert
         actual.Should().Be(expected);
@@ -93,14 +93,14 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
         // Arrange
         await using var context = _fixture.CreateContext();
 
-        var sut = context
+        var entity = await context
             .TestEntities
             .AsNoTracking()
-            .First(e => e.Name == entityName);
+            .FirstAsync(e => e.Name == entityName);
 
         // Act
         // ReSharper disable once MethodHasAsyncOverload
-        var actual = context.DescendantsCount<TestEntity, Guid>(sut.Id);
+        var actual = context.DescendantsCount<TestEntity, Guid>(entity.Id);
 
         // Assert
         actual.Should().Be(expected);
@@ -127,13 +127,13 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
         // Arrange
         await using var context = _fixture.CreateContext();
 
-        var sut = context
+        var entity = await context
             .TestEntities
             .AsNoTracking()
-            .First(e => e.Name == entityName);
+            .FirstAsync(e => e.Name == entityName);
 
         // Act
-        var actual = await context.DescendantsCountAsync<TestEntity, Guid>(sut.Id);
+        var actual = await context.DescendantsCountAsync<TestEntity, Guid>(entity.Id);
 
         // Assert
         actual.Should().Be(expected);
@@ -178,10 +178,10 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
         // Arrange
         await using var context = _fixture.CreateContext();
 
-        var entity = context
+        var entity = await context
             .TestEntities
             .AsNoTracking()
-            .First(e => e.Name == entityName);
+            .FirstAsync(e => e.Name == entityName);
 
         var expected = await context
             .TestEntities

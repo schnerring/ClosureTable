@@ -26,10 +26,10 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
         // Arrange
         await using var context = _fixture.CreateContext();
 
-        var entity = context
+        var entity = await context
             .TestEntities
             .AsNoTracking()
-            .First(e => e.Name == entityName);
+            .FirstAsync(e => e.Name == entityName);
 
         // Act
         // ReSharper disable once MethodHasAsyncOverload
@@ -60,10 +60,10 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
         // Arrange
         await using var context = _fixture.CreateContext();
 
-        var entity = context
+        var entity = await context
             .TestEntities
             .AsNoTracking()
-            .First(e => e.Name == entityName);
+            .FirstAsync(e => e.Name == entityName);
 
         // Act
         var actual = await context.HasAncestorsAsync<TestEntity, Guid>(entity.Id);
@@ -93,10 +93,10 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
         // Arrange
         await using var context = _fixture.CreateContext();
 
-        var entity = context
+        var entity = await context
             .TestEntities
             .AsNoTracking()
-            .First(e => e.Name == entityName);
+            .FirstAsync(e => e.Name == entityName);
 
         // Act
         // ReSharper disable once MethodHasAsyncOverload
@@ -127,10 +127,10 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
         // Arrange
         await using var context = _fixture.CreateContext();
 
-        var entity = context
+        var entity = await context
             .TestEntities
             .AsNoTracking()
-            .First(e => e.Name == entityName);
+            .FirstAsync(e => e.Name == entityName);
 
         // Act
         var actual = await context.AncestorsCountAsync<TestEntity, Guid>(entity.Id);
@@ -178,10 +178,10 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
         // Arrange
         await using var context = _fixture.CreateContext();
 
-        var entity = context
+        var entity = await context
             .TestEntities
             .AsNoTracking()
-            .First(e => e.Name == entityName);
+            .FirstAsync(e => e.Name == entityName);
 
         var expected = await context
             .TestEntities

@@ -47,24 +47,25 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("M", new[] { "I", "M" })]
     [InlineData("N", new[] { "I", "N" })]
     [InlineData("O", new[] { "I", "O" })]
-    public void AncestorsWithSelf_OfTestDataEntity_ShouldBeExpectedAncestors(
+    public async Task AncestorsWithSelf_OfTestDataEntity_ShouldBeExpectedAncestors(
         string entityName,
         string[] expectedAncestorNames)
     {
         // Arrange
-        using var context = _fixture.CreateContext();
+        await using var context = _fixture.CreateContext();
 
-        var sut = context
+        var entity = await context
             .TestEntities
-            .Include(entity => entity.Ancestors)
-            .First(entity => entity.Name == entityName);
+            .Include(e => e.Ancestors)
+            .FirstAsync(e => e.Name == entityName);
 
-        var expectedAncestors = context
+        var expectedAncestors = await context
             .TestEntities
-            .Where(entity => expectedAncestorNames.Contains(entity.Name));
+            .Where(e => expectedAncestorNames.Contains(e.Name))
+            .ToListAsync();
 
         // Act
-        var actualAncestors = sut.Ancestors;
+        var actualAncestors = entity.Ancestors;
 
         // Assert
         actualAncestors
@@ -88,24 +89,25 @@ public abstract partial class TestsBase<TFixture>
     [InlineData("M", new[] { "I" })]
     [InlineData("N", new[] { "I" })]
     [InlineData("O", new[] { "I" })]
-    public void AncestorsWithoutSelf_OfTestDataEntity_ShouldBeExpectedAncestors(
+    public async Task AncestorsWithoutSelf_OfTestDataEntity_ShouldBeExpectedAncestors(
         string entityName,
         string[] expectedAncestorNames)
     {
         // Arrange
-        using var context = _fixture.CreateContext();
+        await using var context = _fixture.CreateContext();
 
-        var sut = context
+        var entity = await context
             .TestEntities
-            .Include(entity => entity.Ancestors)
-            .First(entity => entity.Name == entityName);
+            .Include(e => e.Ancestors)
+            .FirstAsync(e => e.Name == entityName);
 
-        var expectedAncestors = context
+        var expectedAncestors = await context
             .TestEntities
-            .Where(entity => expectedAncestorNames.Contains(entity.Name));
+            .Where(e => expectedAncestorNames.Contains(e.Name))
+            .ToListAsync();
 
         // Act
-        var actualAncestors = sut.AncestorsWithoutSelf;
+        var actualAncestors = entity.AncestorsWithoutSelf;
 
         // Assert
         actualAncestors
