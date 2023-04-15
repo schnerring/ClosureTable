@@ -98,4 +98,43 @@ public abstract partial class SelfReferencingEntityTestsBase<TFixture>
         // Assert
         actual.Should().Be(expected);
     }
+
+    [Theory]
+    [InlineData("A", null)]
+    [InlineData("B", null)]
+    [InlineData("C", null)]
+    [InlineData("D", null)]
+    [InlineData("E", null)]
+    [InlineData("F", null)]
+    [InlineData("G", null)]
+    [InlineData("H", null)]
+    [InlineData("I", null)]
+    [InlineData("J", "I")]
+    [InlineData("K", "J")]
+    [InlineData("L", "K")]
+    [InlineData("M", "I")]
+    [InlineData("N", "I")]
+    [InlineData("O", "I")]
+    public async Task Parent_OfTestDataEntity_ShouldBeExpected(string entityName, string? expectedParentName)
+    {
+        // Arrange
+        await using var context = _fixture.CreateContext();
+
+        var entity = await context
+            .TestEntities
+            .Include(e => e.Parent)
+            .FirstAsync(e => e.Name == entityName);
+
+        var expected = expectedParentName == null
+            ? null
+            : await context
+                .TestEntities
+                .FirstAsync(e => e.Name == expectedParentName);
+
+        // Act
+        var actual = entity.Parent;
+
+        // Assert
+        actual.Should().Be(expected);
+    }
 }

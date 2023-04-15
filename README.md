@@ -44,9 +44,37 @@ roots:  A    B    C    D    E    F    G    H    I
 
 ### Root / Parent
 
-```csharp
-context.TestEntities.Roots<MyEntity, int>() // [A..I]
-```
+| C#                                               | Value                         |
+| ------------------------------------------------ | ----------------------------- |
+| `context.TestEntities.Roots<TestEntity, Guid>()` | `[A, B, C, D, E, F, G, H, I]` |
+
+Let `var a = context.TestEntities.First(e => e.Name == "A")`:
+
+| C#           | Value   |
+| ------------ | ------- |
+| `a.IsRoot`   | `true`  |
+| `a.IsParent` | `false` |
+
+Let `var i = context.TestEntities.First(e => e.Name == "I")`:
+
+| C#           | Value  |
+| ------------ | ------ |
+| `i.IsRoot`   | `true` |
+| `i.IsParent` | `true` |
+
+Let `var k = context.TestEntities.First(e => e.Name == "K")`:
+
+| C#           | Value   |
+| ------------ | ------- |
+| `k.IsRoot`   | `false` |
+| `k.IsParent` | `true`  |
+
+Let `var l = context.TestEntities.First(e => e.Name == "L")`:
+
+| C#           | Value   |
+| ------------ | ------- |
+| `l.IsRoot`   | `false` |
+| `l.IsParent` | `false` |
 
 ### Ancestors
 

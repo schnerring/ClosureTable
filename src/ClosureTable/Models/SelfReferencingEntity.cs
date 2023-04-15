@@ -94,7 +94,7 @@ public class SelfReferencingEntity<TEntity, TKey>
                 _ancestorRelationships.AssertNavigationLoaded(nameof(AncestorRelationships));
 
             // Copy all ancestor relationships of the parent.
-            // Set the copy's descendant to this, and increment it's depth by one.
+            // Set the copy's descendant to this, and increment its depth by one.
             foreach (var parentAncestorRelationship in parent.AncestorRelationships)
                 ancestorRelationships.Add(
                     new AncestorDescendantRelationship<TEntity, TKey>(
