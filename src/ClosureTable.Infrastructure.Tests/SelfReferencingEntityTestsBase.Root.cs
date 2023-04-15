@@ -9,7 +9,7 @@ public abstract partial class SelfReferencingEntityTestsBase<TFixture>
     public void IsParent_OfNewEntity_ShouldBeFalse()
     {
         // Arrange
-        static TestEntity Act() => new(null, "foo");
+        static TestEntity Act() => new(null, "foo", new TestRelationshipProperties(1));
 
         // Act
         var newEntity = Act();
@@ -22,7 +22,7 @@ public abstract partial class SelfReferencingEntityTestsBase<TFixture>
     public void IsRoot_OfNewEntity_ShouldBeTrue()
     {
         // Arrange
-        static TestEntity Act() => new(null, "foo");
+        static TestEntity Act() => new(null, "foo", new TestRelationshipProperties(1));
 
         // Act
         var newEntity = Act();

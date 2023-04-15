@@ -2,11 +2,12 @@
 
 namespace ClosureTable.Models;
 
-public abstract class SelfReferencingEntity<TEntity, TKey, TRelationship>
-    where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>,
-    IRelationshipFactory<TEntity, TKey, TRelationship>
+public abstract class SelfReferencingEntity<TEntity, TKey, TRelationship, TRelationshipProperties>
+    where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship, TRelationshipProperties>,
+    IRelationshipFactory<TEntity, TKey, TRelationship, TRelationshipProperties>
     where TKey : struct
-    where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
+    where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship, TRelationshipProperties>
+    where TRelationshipProperties : class
 {
     private readonly HashSet<TRelationship>? _ancestorRelationships;
     private readonly HashSet<TEntity>? _ancestors;
@@ -16,9 +17,9 @@ public abstract class SelfReferencingEntity<TEntity, TKey, TRelationship>
     private readonly HashSet<TRelationship>? _descendantRelationships;
     private readonly HashSet<TEntity>? _descendants;
 
-    protected SelfReferencingEntity(TEntity? parent) : this()
+    protected SelfReferencingEntity(TEntity? parent, TRelationshipProperties properties) : this()
     {
-        var reflexiveRelationship = TEntity.CreateRelationship((TEntity)this, (TEntity)this, 0, null);
+        var reflexiveRelationship = TEntity.CreateRelationship((TEntity)this, (TEntity)this, 0, properties);
 
         _ancestors = new HashSet<TEntity> { (TEntity)this };
         _ancestorRelationships = new HashSet<TRelationship> { reflexiveRelationship };
@@ -103,7 +104,7 @@ public abstract class SelfReferencingEntity<TEntity, TKey, TRelationship>
                         parentAncestorRelationship.Ancestor,
                         (TEntity)this,
                         parentAncestorRelationship.Depth + 1,
-                        null)); // TODO
+                        parentAncestorRelationship.Properties));
         }
 
         // Re-build ancestor relationships of children recursively

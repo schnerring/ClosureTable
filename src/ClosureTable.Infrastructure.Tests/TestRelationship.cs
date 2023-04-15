@@ -2,23 +2,29 @@
 
 namespace ClosureTable.Infrastructure.Tests;
 
-public class TestRelationship : AncestorDescendantRelationship<TestEntity, Guid, TestRelationship>
+public class TestRelationshipProperties
 {
     public int Weight { get; }
 
+    public TestRelationshipProperties(int weight)
+    {
+        Weight = weight;
+    }
+}
+
+public class TestRelationship : AncestorDescendantRelationship<TestEntity, Guid, TestRelationship, TestRelationshipProperties>
+{
     public TestRelationship(
         TestEntity ancestor,
         TestEntity descendant,
         int depth,
-        int weight) : base(ancestor, descendant, depth)
+        TestRelationshipProperties properties) : base(ancestor, descendant, depth, properties)
     {
-        Weight = weight;
     }
 
     // ReSharper disable once UnusedMember.Local
     // Required for EF constructor binding. See: https://github.com/dotnet/efcore/issues/12078
     private TestRelationship()
     {
-        Weight = default!;
     }
 }

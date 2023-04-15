@@ -4,8 +4,16 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClosureTable.Infrastructure.Tests;
 
-public class TestEntityConfiguration : SelfReferencingEntityConfiguration<TestEntity, Guid, TestRelationship>
+public class TestEntityConfiguration : SelfReferencingEntityConfiguration<TestEntity, Guid, TestRelationship, TestRelationshipProperties>
 {
+    public TestEntityConfiguration() :
+        base(builder =>
+        {
+            builder.Property(properties => properties.Weight);
+        })
+    {
+    }
+
     public override void Configure(EntityTypeBuilder<TestEntity> builder)
     {
         base.Configure(builder);

@@ -4,11 +4,11 @@ using ClosureTable.Models;
 namespace ClosureTable.Infrastructure.Tests;
 
 [DebuggerDisplay("{Name}")]
-public class TestEntity : SelfReferencingEntity<TestEntity, Guid, TestRelationship>, IRelationshipFactory<TestEntity, Guid, TestRelationship>
+public class TestEntity : SelfReferencingEntity<TestEntity, Guid, TestRelationship, TestRelationshipProperties>, IRelationshipFactory<TestEntity, Guid, TestRelationship, TestRelationshipProperties>
 {
     public string Name { get; }
 
-    public TestEntity(TestEntity? parent, string name) : base(parent)
+    public TestEntity(TestEntity? parent, string name, TestRelationshipProperties properties) : base(parent, properties)
     {
         Name = name;
     }
@@ -24,8 +24,12 @@ public class TestEntity : SelfReferencingEntity<TestEntity, Guid, TestRelationsh
         TestEntity ancestor,
         TestEntity descendant,
         int depth,
-        IRelationshipOptions options)
+        TestRelationshipProperties properties)
     {
-        return new TestRelationship(ancestor, descendant, depth, 0); // TODO
+        return new TestRelationship(
+            ancestor,
+            descendant,
+            depth,
+            properties);
     }
 }

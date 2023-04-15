@@ -4,11 +4,19 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClosureTable.Infrastructure.Configuration;
 
-public abstract class SelfReferencingEntityConfiguration<TEntity, TKey, TRelationship> : IEntityTypeConfiguration<TEntity>
-    where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>, IRelationshipFactory<TEntity, TKey, TRelationship>
+public abstract class SelfReferencingEntityConfiguration<TEntity, TKey, TRelationship, TRelationshipProperties> : IEntityTypeConfiguration<TEntity>
+    where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship, TRelationshipProperties>, IRelationshipFactory<TEntity, TKey, TRelationship, TRelationshipProperties>
     where TKey : struct
-    where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
+    where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship, TRelationshipProperties>
+    where TRelationshipProperties : class
 {
+    private readonly Action<OwnedNavigationBuilder<TRelationship, TRelationshipProperties>> _propertiesBuilder;
+
+    protected SelfReferencingEntityConfiguration(Action<OwnedNavigationBuilder<TRelationship, TRelationshipProperties>> propertiesBuilder)
+    {
+        _propertiesBuilder = propertiesBuilder;
+    }
+
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
         builder.HasKey(entity => entity.Id);
@@ -53,6 +61,9 @@ public abstract class SelfReferencingEntityConfiguration<TEntity, TKey, TRelatio
                         .Navigation(relationship => relationship.Descendant)
                         .UsePropertyAccessMode(PropertyAccessMode.Field);
                     relationshipBuilder.Property(relationship => relationship.Depth);
+                    relationshipBuilder.OwnsOne(
+                        relationship => relationship.Properties,
+                        _propertiesBuilder);
                 }
             )
             .ToTable(typeof(TEntity).Name);

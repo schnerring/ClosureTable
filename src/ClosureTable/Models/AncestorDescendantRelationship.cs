@@ -5,22 +5,25 @@ namespace ClosureTable.Models;
 /// <summary>
 ///     Ancestor-descendant relationship entity for self-referencing entity types.
 /// </summary>
-/// <typeparam name="TEntity">Entity type the ancestor-descendant relationship targets.</typeparam>
+/// <typeparam name="TEntity">Entity type the relationship targets.</typeparam>
 /// <typeparam name="TKey">Primary key type of target type.</typeparam>
-/// <typeparam name="TRelationship">Ancestor-descendant relationship type.</typeparam>
-public class AncestorDescendantRelationship<TEntity, TKey, TRelationship>
-    where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>, IRelationshipFactory<TEntity, TKey, TRelationship>
+/// <typeparam name="TRelationship">Relationship type.</typeparam>
+/// <typeparam name="TRelationshipProperties">Additional relationship properties.</typeparam>
+public class AncestorDescendantRelationship<TEntity, TKey, TRelationship, TRelationshipProperties>
+    where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship, TRelationshipProperties>, IRelationshipFactory<TEntity, TKey, TRelationship, TRelationshipProperties>
     where TKey : struct
-    where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
+    where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship, TRelationshipProperties>
+    where TRelationshipProperties : class
 {
     private readonly TEntity? _ancestor;
     private readonly TEntity? _descendant;
 
-    public AncestorDescendantRelationship(TEntity ancestor, TEntity descendant, int depth) : this()
+    public AncestorDescendantRelationship(TEntity ancestor, TEntity descendant, int depth, TRelationshipProperties properties) : this()
     {
         _ancestor = ancestor;
         _descendant = descendant;
         Depth = depth;
+        Properties = properties;
     }
 
     // Required for EF constructor binding. See: https://github.com/dotnet/efcore/issues/12078
@@ -31,6 +34,8 @@ public class AncestorDescendantRelationship<TEntity, TKey, TRelationship>
 
         DescendantId = default!;
         _descendant = default!;
+
+        Properties = default!;
     }
 
     public TKey AncestorId { get; }
@@ -40,4 +45,6 @@ public class AncestorDescendantRelationship<TEntity, TKey, TRelationship>
     public TEntity Descendant => _descendant.AssertNavigationLoaded(nameof(Descendant));
 
     public int Depth { get; }
+
+    public TRelationshipProperties Properties { get; }
 }
