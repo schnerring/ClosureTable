@@ -2,27 +2,29 @@
 
 namespace ClosureTable.Models;
 
-public class SelfReferencingEntity<TEntity, TKey>
-    where TEntity : SelfReferencingEntity<TEntity, TKey>
+public abstract class SelfReferencingEntity<TEntity, TKey, TRelationship>
+    where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>,
+    IRelationshipFactory<TEntity, TKey, TRelationship>
     where TKey : struct
+    where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
 {
-    private readonly HashSet<AncestorDescendantRelationship<TEntity, TKey>>? _ancestorRelationships;
+    private readonly HashSet<TRelationship>? _ancestorRelationships;
     private readonly HashSet<TEntity>? _ancestors;
 
     private readonly HashSet<TEntity>? _children;
 
-    private readonly HashSet<AncestorDescendantRelationship<TEntity, TKey>>? _descendantRelationships;
+    private readonly HashSet<TRelationship>? _descendantRelationships;
     private readonly HashSet<TEntity>? _descendants;
 
-    public SelfReferencingEntity(TEntity? parent) : this()
+    protected SelfReferencingEntity(TEntity? parent) : this()
     {
-        var reflexiveRelationship = new AncestorDescendantRelationship<TEntity, TKey>((TEntity)this, (TEntity)this, 0);
+        var reflexiveRelationship = TEntity.CreateRelationship((TEntity)this, (TEntity)this, 0, null);
 
         _ancestors = new HashSet<TEntity> { (TEntity)this };
-        _ancestorRelationships = new HashSet<AncestorDescendantRelationship<TEntity, TKey>> { reflexiveRelationship };
+        _ancestorRelationships = new HashSet<TRelationship> { reflexiveRelationship };
 
         _descendants = new HashSet<TEntity> { (TEntity)this };
-        _descendantRelationships = new HashSet<AncestorDescendantRelationship<TEntity, TKey>> { reflexiveRelationship };
+        _descendantRelationships = new HashSet<TRelationship> { reflexiveRelationship };
 
         _children = new HashSet<TEntity>();
 
@@ -67,7 +69,7 @@ public class SelfReferencingEntity<TEntity, TKey>
     public IReadOnlyCollection<TEntity> AncestorsWithoutSelf =>
         Ancestors.Where(ancestor => ancestor != this).ToList();
 
-    public IReadOnlyCollection<AncestorDescendantRelationship<TEntity, TKey>> AncestorRelationships =>
+    public IReadOnlyCollection<TRelationship> AncestorRelationships =>
         _ancestorRelationships.AssertNavigationLoaded(nameof(AncestorRelationships));
 
     public IReadOnlyCollection<TEntity> Descendants =>
@@ -76,7 +78,7 @@ public class SelfReferencingEntity<TEntity, TKey>
     public IReadOnlyCollection<TEntity> DescendantsWithoutSelf =>
         Descendants.Where(descendant => descendant != this).ToList();
 
-    public IReadOnlyCollection<AncestorDescendantRelationship<TEntity, TKey>> DescendantRelationships =>
+    public IReadOnlyCollection<TRelationship> DescendantRelationships =>
         _descendantRelationships.AssertNavigationLoaded(nameof(DescendantRelationships));
 
     // public int Position { get; }
@@ -97,10 +99,11 @@ public class SelfReferencingEntity<TEntity, TKey>
             // Set the copy's descendant to this, and increment it's depth by one.
             foreach (var parentAncestorRelationship in parent.AncestorRelationships)
                 ancestorRelationships.Add(
-                    new AncestorDescendantRelationship<TEntity, TKey>(
+                    TEntity.CreateRelationship(
                         parentAncestorRelationship.Ancestor,
                         (TEntity)this,
-                        parentAncestorRelationship.Depth + 1));
+                        parentAncestorRelationship.Depth + 1,
+                        null)); // TODO
         }
 
         // Re-build ancestor relationships of children recursively

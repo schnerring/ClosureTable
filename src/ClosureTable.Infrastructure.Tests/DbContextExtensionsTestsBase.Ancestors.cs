@@ -33,7 +33,7 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
 
         // Act
         // ReSharper disable once MethodHasAsyncOverload
-        var actual = context.HasAncestors<TestEntity, Guid>(entity.Id);
+        var actual = context.HasAncestors<TestEntity, Guid, TestRelationship>(entity.Id);
 
         // Assert
         actual.Should().Be(expected);
@@ -66,7 +66,7 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
             .FirstAsync(e => e.Name == entityName);
 
         // Act
-        var actual = await context.HasAncestorsAsync<TestEntity, Guid>(entity.Id);
+        var actual = await context.HasAncestorsAsync<TestEntity, Guid, TestRelationship>(entity.Id);
 
         // Assert
         actual.Should().Be(expected);
@@ -100,7 +100,7 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
 
         // Act
         // ReSharper disable once MethodHasAsyncOverload
-        var actual = context.AncestorsCount<TestEntity, Guid>(entity.Id);
+        var actual = context.AncestorsCount<TestEntity, Guid, TestRelationship>(entity.Id);
 
         // Assert
         actual.Should().Be(expected);
@@ -133,7 +133,7 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
             .FirstAsync(e => e.Name == entityName);
 
         // Act
-        var actual = await context.AncestorsCountAsync<TestEntity, Guid>(entity.Id);
+        var actual = await context.AncestorsCountAsync<TestEntity, Guid, TestRelationship>(entity.Id);
 
         // Assert
         actual.Should().Be(expected);
@@ -190,7 +190,7 @@ public abstract partial class DbContextExtensionsTestsBase<TFixture>
 
         // Act
         var actual = await context
-            .AncestorsOf<TestEntity, Guid>(entity.Id, withSelf)
+            .AncestorsOf<TestEntity, Guid, TestRelationship>(entity.Id, withSelf)
             .ToListAsync();
 
         // Assert

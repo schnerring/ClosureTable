@@ -4,7 +4,7 @@ using ClosureTable.Models;
 namespace ClosureTable.Infrastructure.Tests;
 
 [DebuggerDisplay("{Name}")]
-public class TestEntity : SelfReferencingEntity<TestEntity, Guid>
+public class TestEntity : SelfReferencingEntity<TestEntity, Guid, TestRelationship>, IRelationshipFactory<TestEntity, Guid, TestRelationship>
 {
     public string Name { get; }
 
@@ -18,5 +18,14 @@ public class TestEntity : SelfReferencingEntity<TestEntity, Guid>
     private TestEntity()
     {
         Name = default!;
+    }
+
+    public static TestRelationship CreateRelationship(
+        TestEntity ancestor,
+        TestEntity descendant,
+        int depth,
+        IRelationshipOptions options)
+    {
+        return new TestRelationship(ancestor, descendant, depth, 0); // TODO
     }
 }

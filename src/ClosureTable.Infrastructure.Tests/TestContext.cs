@@ -12,8 +12,8 @@ public class TestContext : DbContext
     public DbSet<TestEntity> TestEntities =>
         Set<TestEntity>();
 
-    public DbSet<AncestorDescendantRelationship<TestEntity, Guid>> TestRelationships =>
-        Set<AncestorDescendantRelationship<TestEntity, Guid>>();
+    public DbSet<TestRelationship> TestRelationships =>
+        Set<TestRelationship>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -4,9 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace ClosureTable.Infrastructure.Configuration;
 
-public abstract class SelfReferencingEntityConfiguration<TEntity, TKey> : IEntityTypeConfiguration<TEntity>
-    where TEntity : SelfReferencingEntity<TEntity, TKey>
+public abstract class SelfReferencingEntityConfiguration<TEntity, TKey, TRelationship> : IEntityTypeConfiguration<TEntity>
+    where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>, IRelationshipFactory<TEntity, TKey, TRelationship>
     where TKey : struct
+    where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
 {
     public virtual void Configure(EntityTypeBuilder<TEntity> builder)
     {
@@ -28,7 +29,7 @@ public abstract class SelfReferencingEntityConfiguration<TEntity, TKey> : IEntit
         builder
             .HasMany(entity => entity.Ancestors)
             .WithMany(entity => entity.Descendants)
-            .UsingEntity<AncestorDescendantRelationship<TEntity, TKey>>(
+            .UsingEntity<TRelationship>(
                 relationshipBuilder => relationshipBuilder
                     .HasOne(relationship => relationship.Ancestor)
                     .WithMany(entity => entity.DescendantRelationships)

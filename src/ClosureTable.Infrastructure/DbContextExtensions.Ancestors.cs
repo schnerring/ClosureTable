@@ -6,76 +6,82 @@ namespace ClosureTable.Infrastructure;
 
 public static partial class DbContextExtensions
 {
-    private static Expression<Func<AncestorDescendantRelationship<TEntity, TKey>, bool>>
-        AncestorsPredicate<TEntity, TKey>(TKey id, bool includeSelf)
-        where TEntity : SelfReferencingEntity<TEntity, TKey>
+    private static Expression<Func<AncestorDescendantRelationship<TEntity, TKey, TRelationship>, bool>>
+        AncestorsPredicate<TEntity, TKey, TRelationship>(TKey id, bool includeSelf)
+        where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>, IRelationshipFactory<TEntity, TKey, TRelationship>
         where TKey : struct
+        where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
     {
         var minDepth = includeSelf ? 0 : 1;
         return relationship => relationship.DescendantId.Equals(id) &&
                                relationship.Depth >= minDepth;
     }
 
-    public static bool HasAncestors<TEntity, TKey>(
+    public static bool HasAncestors<TEntity, TKey, TRelationship>(
         this DbContext @this,
         TKey id)
-        where TEntity : SelfReferencingEntity<TEntity, TKey>
+        where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>, IRelationshipFactory<TEntity, TKey, TRelationship>
         where TKey : struct
+        where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
     {
         return @this
-            .Set<AncestorDescendantRelationship<TEntity, TKey>>()
+            .Set<TRelationship>()
             .AsNoTracking()
-            .Any(AncestorsPredicate<TEntity, TKey>(id, false));
+            .Any(AncestorsPredicate<TEntity, TKey, TRelationship>(id, false));
     }
 
-    public static async Task<bool> HasAncestorsAsync<TEntity, TKey>(
+    public static async Task<bool> HasAncestorsAsync<TEntity, TKey, TRelationship>(
         this DbContext @this,
         TKey id,
         CancellationToken cancellationToken = default)
-        where TEntity : SelfReferencingEntity<TEntity, TKey>
+        where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>, IRelationshipFactory<TEntity, TKey, TRelationship>
         where TKey : struct
+        where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
     {
         return await @this
-            .Set<AncestorDescendantRelationship<TEntity, TKey>>()
+            .Set<TRelationship>()
             .AsNoTracking()
-            .AnyAsync(AncestorsPredicate<TEntity, TKey>(id, false), cancellationToken);
+            .AnyAsync(AncestorsPredicate<TEntity, TKey, TRelationship>(id, false), cancellationToken);
     }
 
-    public static int AncestorsCount<TEntity, TKey>(
+    public static int AncestorsCount<TEntity, TKey, TRelationship>(
         this DbContext @this,
         TKey id)
-        where TEntity : SelfReferencingEntity<TEntity, TKey>
+        where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>, IRelationshipFactory<TEntity, TKey, TRelationship>
         where TKey : struct
+        where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
     {
         return @this
-            .Set<AncestorDescendantRelationship<TEntity, TKey>>()
+            .Set<TRelationship>()
             .AsNoTracking()
-            .Count(AncestorsPredicate<TEntity, TKey>(id, false));
+            .Count(AncestorsPredicate<TEntity, TKey, TRelationship>(id, false));
     }
 
-    public static async Task<int> AncestorsCountAsync<TEntity, TKey>(
+    public static async Task<int> AncestorsCountAsync<TEntity, TKey, TRelationship>(
         this DbContext @this,
         TKey id,
         CancellationToken cancellationToken = default)
-        where TEntity : SelfReferencingEntity<TEntity, TKey>
+        where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>, IRelationshipFactory<TEntity, TKey, TRelationship>
         where TKey : struct
+        where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
     {
         return await @this
-            .Set<AncestorDescendantRelationship<TEntity, TKey>>()
+            .Set<TRelationship>()
             .AsNoTracking()
-            .CountAsync(AncestorsPredicate<TEntity, TKey>(id, false), cancellationToken);
+            .CountAsync(AncestorsPredicate<TEntity, TKey, TRelationship>(id, false), cancellationToken);
     }
 
-    public static IQueryable<SelfReferencingEntity<TEntity, TKey>> AncestorsOf<TEntity, TKey>(
+    public static IQueryable<SelfReferencingEntity<TEntity, TKey, TRelationship>> AncestorsOf<TEntity, TKey, TRelationship>(
         this DbContext @this,
         TKey id,
         bool withSelf)
-        where TEntity : SelfReferencingEntity<TEntity, TKey>
+        where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>, IRelationshipFactory<TEntity, TKey, TRelationship>
         where TKey : struct
+        where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
     {
         return @this
-            .Set<AncestorDescendantRelationship<TEntity, TKey>>()
-            .Where(AncestorsPredicate<TEntity, TKey>(id, withSelf))
+            .Set<TRelationship>()
+            .Where(AncestorsPredicate<TEntity, TKey, TRelationship>(id, withSelf))
             .Include(relationship => relationship.Ancestor)
             .Select(relationship => relationship.Ancestor);
     }

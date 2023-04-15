@@ -7,9 +7,11 @@ namespace ClosureTable.Models;
 /// </summary>
 /// <typeparam name="TEntity">Entity type the ancestor-descendant relationship targets.</typeparam>
 /// <typeparam name="TKey">Primary key type of target type.</typeparam>
-public class AncestorDescendantRelationship<TEntity, TKey>
-    where TEntity : SelfReferencingEntity<TEntity, TKey>
+/// <typeparam name="TRelationship">Ancestor-descendant relationship type.</typeparam>
+public class AncestorDescendantRelationship<TEntity, TKey, TRelationship>
+    where TEntity : SelfReferencingEntity<TEntity, TKey, TRelationship>, IRelationshipFactory<TEntity, TKey, TRelationship>
     where TKey : struct
+    where TRelationship : AncestorDescendantRelationship<TEntity, TKey, TRelationship>
 {
     private readonly TEntity? _ancestor;
     private readonly TEntity? _descendant;
@@ -22,11 +24,11 @@ public class AncestorDescendantRelationship<TEntity, TKey>
     }
 
     // Required for EF constructor binding. See: https://github.com/dotnet/efcore/issues/12078
-    private AncestorDescendantRelationship()
+    protected AncestorDescendantRelationship()
     {
         AncestorId = default!;
         _ancestor = default!;
-    
+
         DescendantId = default!;
         _descendant = default!;
     }

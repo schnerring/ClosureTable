@@ -32,7 +32,7 @@ public abstract partial class SelfReferencingEntityTestsBase<TFixture> : IClassF
         // Act
         var roots = await context
             .TestEntities
-            .Roots<TestEntity, Guid>()
+            .Roots<TestEntity, Guid, TestRelationship>()
             .ToListAsync();
 
         // Assert
@@ -48,7 +48,7 @@ public abstract partial class SelfReferencingEntityTestsBase<TFixture> : IClassF
         // Act
         var roots = await context
             .TestEntities
-            .Roots<TestEntity, Guid>()
+            .Roots<TestEntity, Guid, TestRelationship>()
             .ToListAsync();
 
         // Assert
