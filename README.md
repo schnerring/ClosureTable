@@ -76,6 +76,24 @@ Let `var l = context.TestEntities.First(e => e.Name == "L")`:
 | `l.IsRoot`   | `false` |
 | `l.IsParent` | `false` |
 
+### Children
+
+Let `var i = context.TestEntities.First(e => e.Name == "I")`:
+
+| C#                 | Value          |
+| ------------------ | -------------- |
+| `i.Children`       | `[J, M, N, O]` |
+| `i.Children.Count` | `3`            |
+| `i.Children.Any()` | `true`         |
+
+Let `var l = context.TestEntities.First(e => e.Name == "I")`:
+
+| C#                 | Value   |
+| ------------------ | ------- |
+| `l.Children`       | `[]`    |
+| `l.Children.Count` | `0`     |
+| `l.Children.Any()` | `false` |
+
 ### Ancestors
 
 Let `var i = context.TestEntities.First(e => e.Name == "I")`:
